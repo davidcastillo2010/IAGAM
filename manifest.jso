@@ -1,0 +1,20 @@
+
+{
+  "name": "IAGAM - Inteligencia que busca contigo",
+  "short_name": "IAGAM",
+  "description": "Inteligencia que busca contigo",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#080D1B",
+  "theme_color": "#080D1B",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
