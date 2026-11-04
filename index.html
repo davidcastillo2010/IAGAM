@@ -384,6 +384,20 @@ consulta.addEventListener("keydown", function(event) {
   }
 });
 
+function limpiarResultados(lista) {
+  const vistos = new Set();
+
+  return lista.filter(item => {
+    const titulo = (item.titulo || "").trim().toLowerCase();
+
+    if (!titulo || vistos.has(titulo)) {
+      return false;
+    }
+
+    vistos.add(titulo);
+    return true;
+  });
+}
 </script>
 
 </body>
