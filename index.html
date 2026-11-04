@@ -1,59 +1,65 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IAGAM - Inteligencia que busca contigo</title>
+
 <style>
 * {
   box-sizing: border-box;
 }
+
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   background: #080D1B;
   color: white;
 }
+
 header {
   padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   border-bottom: 1px solid #263452;
 }
+
 .logo {
-  font-size: 27px;
-  font-weight: bold;
   color: #50DFFF;
+  font-size: 30px;
+  font-weight: bold;
   letter-spacing: 2px;
 }
+
 .tag {
   color: #AAB8D4;
   font-size: 12px;
+  margin-top: 5px;
 }
+
 main {
-  max-width: 750px;
-  margin: 85px auto;
+  max-width: 800px;
+  margin: 65px auto;
   padding: 20px;
   text-align: center;
 }
+
 .robot {
   font-size: 65px;
-  margin-bottom: 15px;
 }
+
 h1 {
   font-size: 38px;
-  margin: 10px 0;
 }
+
 h1 span {
   color: #51DFFF;
 }
+
 .description {
   color: #AAB8D4;
-  line-height: 1.6;
+  line-height: 1.7;
   margin-bottom: 35px;
 }
+
 .search {
   display: flex;
   background: #151F36;
@@ -62,6 +68,7 @@ h1 span {
   padding: 8px;
   gap: 8px;
 }
+
 .search input {
   flex: 1;
   min-width: 0;
@@ -72,6 +79,7 @@ h1 span {
   padding: 12px;
   font-size: 16px;
 }
+
 .search button {
   border: none;
   border-radius: 11px;
@@ -79,18 +87,59 @@ h1 span {
   color: white;
   padding: 12px 18px;
   font-weight: bold;
+  cursor: pointer;
 }
-.notice {
-  color: #8FA5CA;
-  font-size: 13px;
-  margin-top: 18px;
+
+#estado {
+  color: #AAB8D4;
+  margin: 22px 0;
 }
+
+#resultados {
+  text-align: left;
+  margin-top: 30px;
+}
+
+.resultado {
+  background: #151F36;
+  border: 1px solid #35496E;
+  border-radius: 14px;
+  padding: 18px;
+  margin: 14px 0;
+}
+
+.resultado h3 {
+  color: #51DFFF;
+  margin-top: 0;
+}
+
+.resultado p {
+  color: #C5D1E8;
+  line-height: 1.6;
+}
+
+.resultado a {
+  color: #51DFFF;
+  text-decoration: none;
+}
+
+.resultado a:hover {
+  text-decoration: underline;
+}
+
+.fuente {
+  color: #9CAED0;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
 .features {
   display: grid;
   grid-template-columns: repeat(3,1fr);
   gap: 12px;
   margin-top: 55px;
 }
+
 .feature {
   background: #121C32;
   border: 1px solid #293B60;
@@ -99,143 +148,242 @@ h1 span {
   color: #B9C9E8;
   font-size: 13px;
 }
+
 .feature strong {
   display: block;
   color: #54DFFF;
   margin-bottom: 8px;
 }
+
 footer {
   text-align: center;
   color: #7384A5;
   padding: 25px;
   font-size: 12px;
 }
-@media(max-width:500px) {
-  main { margin-top: 55px; }
-  h1 { font-size: 31px; }
-  .features { grid-template-columns: 1fr; }
+
+@media(max-width:550px) {
+  main {
+    margin-top: 40px;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
+
+  .search button {
+    padding: 10px;
+  }
 }
 </style>
 </head>
+
 <body>
 
 <header>
-  <div>
-    <div class="logo">🤖 IAGAM</div>
-    <div class="tag">INTELIGENCIA QUE BUSCA CONTIGO</div>
-  </div>
+  <div class="logo">🤖 IAGAM</div>
+  <div class="tag">INTELIGENCIA QUE BUSCA CONTIGO</div>
 </header>
 
 <main>
+
   <div class="robot">🌐</div>
+
   <h1>Bienvenido a <span>IAGAM</span></h1>
+
   <p class="description">
     Tu espacio inteligente para encontrar información.
-    Pregunta, explora y descubre nuevos conocimientos.
+    Busca, explora y descubre nuevos conocimientos.
   </p>
 
   <div class="search">
-<input id="consulta" type="text" placeholder="¿Qué quieres saber?">
-<button id="buscar" type="button">BUSCAR</button>
-</div>
+    <input
+      id="consulta"
+      type="search"
+      placeholder="¿Qué quieres saber?"
+    >
+    <button id="buscar" type="button">BUSCAR</button>
+  </div>
 
-<div id="resultados"></div>
-
-  <p class="notice">
-    Estamos preparando tu buscador inteligente.
+  <p id="estado">
+    Busca información en diferentes fuentes públicas.
   </p>
 
+  <div id="resultados"></div>
+
   <div class="features">
+
     <div class="feature">
       <strong>🔎 BÚSQUEDA</strong>
-      Encuentra información.
+      Consulta diferentes fuentes.
     </div>
+
     <div class="feature">
-      <strong>🧠 INTELIGENCIA</strong>
-      Nuevas funciones próximamente.
+      <strong>🧠 CONOCIMIENTO</strong>
+      Descubre nueva información.
     </div>
+
     <div class="feature">
       <strong>🚀 EVOLUCIÓN</strong>
-      Una IA que seguirá creciendo.
+      Nuevas funciones próximamente.
     </div>
+
   </div>
+
 </main>
 
 <footer>
   © 2026 IAGAM · Inteligencia que busca contigo
 </footer>
 
-
 <script>
+
 const consulta = document.getElementById("consulta");
 const boton = document.getElementById("buscar");
 const resultados = document.getElementById("resultados");
+const estado = document.getElementById("estado");
 
 async function buscarInformacion() {
+
   const pregunta = consulta.value.trim();
 
   if (!pregunta) {
-    resultados.textContent = "Escribe algo para buscar.";
+    estado.textContent = "Escribe algo para buscar.";
+    resultados.replaceChildren();
     return;
   }
 
-  resultados.textContent = "IAGAM está buscando información...";
+  boton.disabled = true;
+  boton.textContent = "BUSCANDO...";
+  estado.textContent = "IAGAM está consultando sus fuentes...";
+  resultados.replaceChildren();
+
+  const wikipediaURL =
+    "https://es.wikipedia.org/w/api.php?action=query&list=search&srsearch="
+    + encodeURIComponent(pregunta)
+    + "&format=json&origin=*";
+
+  const wikidataURL =
+    "https://www.wikidata.org/w/api.php?action=wbsearchentities&search="
+    + encodeURIComponent(pregunta)
+    + "&language=es&format=json&origin=*";
 
   try {
-    const url = "https://es.wikipedia.org/w/api.php?action=query&list=search&srsearch="
-      + encodeURIComponent(pregunta)
-      + "&format=json&origin=*";
 
-    const respuesta = await fetch(url);
-    if (!respuesta.ok) throw new Error("Error de conexión");
+    const respuestas = await Promise.allSettled([
+      fetch(wikipediaURL).then(r => {
+        if (!r.ok) throw new Error("Wikipedia no disponible");
+        return r.json();
+      }),
+      fetch(wikidataURL).then(r => {
+        if (!r.ok) throw new Error("Wikidata no disponible");
+        return r.json();
+      })
+    ]);
 
-    const datos = await respuesta.json();
-    resultados.replaceChildren();
+    const articulos = [];
 
-    const lista = datos.query.search;
+    if (respuestas[0].status === "fulfilled") {
 
-    if (lista.length === 0) {
-      resultados.textContent = "No encontramos resultados.";
+      const lista = respuestas[0].value.query.search;
+
+      lista.forEach(item => {
+        articulos.push({
+          titulo: item.title,
+          descripcion: item.snippet.replace(/<[^>]*>/g, ""),
+          enlace: "https://es.wikipedia.org/?curid=" + item.pageid,
+          fuente: "Wikipedia"
+        });
+      });
+
+    }
+
+    if (respuestas[1].status === "fulfilled") {
+
+      const lista = respuestas[1].value.search;
+
+      lista.forEach(item => {
+        articulos.push({
+          titulo: item.label,
+          descripcion: item.description || "Información disponible en Wikidata.",
+          enlace: item.concepturi,
+          fuente: "Wikidata"
+        });
+      });
+
+    }
+
+    if (articulos.length === 0) {
+      estado.textContent =
+        "No encontramos resultados. Intenta otra búsqueda.";
       return;
     }
+
+    estado.textContent =
+      "IAGAM encontró " + articulos.length + " resultados.";
 
     const titulo = document.createElement("h2");
     titulo.textContent = "Resultados de IAGAM";
     resultados.appendChild(titulo);
 
-    lista.forEach(item => {
+    articulos.forEach(item => {
+
       const tarjeta = document.createElement("div");
-      tarjeta.style.cssText =
-        "background:#151F36;padding:16px;margin:12px 0;border-radius:12px;text-align:left;border:1px solid #42547B";
+      tarjeta.className = "resultado";
+
+      const fuente = document.createElement("div");
+      fuente.className = "fuente";
+      fuente.textContent = "FUENTE: " + item.fuente;
 
       const nombre = document.createElement("h3");
-      nombre.textContent = item.title;
+      nombre.textContent = item.titulo;
 
       const descripcion = document.createElement("p");
-      descripcion.textContent = item.snippet.replace(/<[^>]*>/g, "");
+      descripcion.textContent = item.descripcion;
 
       const enlace = document.createElement("a");
-      enlace.textContent = "Leer información completa";
-      enlace.href = "https://es.wikipedia.org/?curid=" + item.pageid;
+      enlace.textContent = "Consultar fuente completa →";
+      enlace.href = item.enlace;
       enlace.target = "_blank";
       enlace.rel = "noopener noreferrer";
-      enlace.style.color = "#51DFFF";
 
-      tarjeta.append(nombre, descripcion, enlace);
+      tarjeta.append(
+        fuente,
+        nombre,
+        descripcion,
+        enlace
+      );
+
       resultados.appendChild(tarjeta);
+
     });
 
   } catch (error) {
-    resultados.textContent =
-      "No pudimos realizar la búsqueda. Inténtalo nuevamente.";
+
+    estado.textContent =
+      "Ocurrió un problema al realizar la búsqueda. Inténtalo de nuevo.";
+
+  } finally {
+
+    boton.disabled = false;
+    boton.textContent = "BUSCAR";
+
   }
+
 }
 
 boton.addEventListener("click", buscarInformacion);
 
 consulta.addEventListener("keydown", function(event) {
-  if (event.key === "Enter") buscarInformacion();
+  if (event.key === "Enter") {
+    buscarInformacion();
+  }
 });
+
 </script>
 
 </body>
