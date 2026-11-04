@@ -330,7 +330,7 @@ async function buscarInformacion() {
     titulo.textContent = "Resultados de IAGAM";
     resultados.appendChild(titulo);
 
-    articulos.forEach(item => {
+    limpiarResultados(articulos).forEach(item => {
 
       const tarjeta = document.createElement("div");
       tarjeta.className = "resultado";
