@@ -1,65 +1,47 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IAGAM - Inteligencia que busca contigo</title>
-
 <style>
-* {
-  box-sizing: border-box;
-}
-
+* { box-sizing: border-box; }
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   background: #080D1B;
   color: white;
 }
-
 header {
   padding: 20px;
   border-bottom: 1px solid #263452;
 }
-
 .logo {
   color: #50DFFF;
   font-size: 30px;
   font-weight: bold;
   letter-spacing: 2px;
 }
-
 .tag {
   color: #AAB8D4;
   font-size: 12px;
   margin-top: 5px;
 }
-
 main {
   max-width: 800px;
   margin: 65px auto;
   padding: 20px;
   text-align: center;
 }
-
-.robot {
-  font-size: 65px;
-}
-
-h1 {
-  font-size: 38px;
-}
-
-h1 span {
-  color: #51DFFF;
-}
-
+.robot { font-size: 65px; }
+h1 { font-size: 38px; }
+h1 span { color: #51DFFF; }
 .description {
   color: #AAB8D4;
   line-height: 1.7;
   margin-bottom: 35px;
 }
-
 .search {
   display: flex;
   background: #151F36;
@@ -68,7 +50,6 @@ h1 span {
   padding: 8px;
   gap: 8px;
 }
-
 .search input {
   flex: 1;
   min-width: 0;
@@ -79,7 +60,6 @@ h1 span {
   padding: 12px;
   font-size: 16px;
 }
-
 .search button {
   border: none;
   border-radius: 11px;
@@ -89,17 +69,17 @@ h1 span {
   font-weight: bold;
   cursor: pointer;
 }
-
+.search button:disabled {
+  opacity: .6;
+}
 #estado {
   color: #AAB8D4;
   margin: 22px 0;
 }
-
 #resultados {
   text-align: left;
   margin-top: 30px;
 }
-
 .resultado {
   background: #151F36;
   border: 1px solid #35496E;
@@ -107,39 +87,33 @@ h1 span {
   padding: 18px;
   margin: 14px 0;
 }
-
 .resultado h3 {
   color: #51DFFF;
   margin-top: 0;
 }
-
 .resultado p {
   color: #C5D1E8;
   line-height: 1.6;
+  white-space: pre-line;
 }
-
 .resultado a {
   color: #51DFFF;
   text-decoration: none;
 }
-
 .resultado a:hover {
   text-decoration: underline;
 }
-
 .fuente {
   color: #9CAED0;
   font-size: 12px;
   margin-bottom: 10px;
 }
-
 .features {
   display: grid;
   grid-template-columns: repeat(3,1fr);
   gap: 12px;
   margin-top: 55px;
 }
-
 .feature {
   background: #121C32;
   border: 1px solid #293B60;
@@ -148,40 +122,25 @@ h1 span {
   color: #B9C9E8;
   font-size: 13px;
 }
-
 .feature strong {
   display: block;
   color: #54DFFF;
   margin-bottom: 8px;
 }
-
 footer {
   text-align: center;
   color: #7384A5;
   padding: 25px;
   font-size: 12px;
 }
-
 @media(max-width:550px) {
-  main {
-    margin-top: 40px;
-  }
-
-  h1 {
-    font-size: 30px;
-  }
-
-  .features {
-    grid-template-columns: 1fr;
-  }
-
-  .search button {
-    padding: 10px;
-  }
+  main { margin-top: 40px; }
+  h1 { font-size: 30px; }
+  .features { grid-template-columns: 1fr; }
+  .search button { padding: 10px; }
 }
 </style>
 </head>
-
 <body>
 
 <header>
@@ -190,50 +149,38 @@ footer {
 </header>
 
 <main>
-
   <div class="robot">🌐</div>
-
   <h1>Bienvenido a <span>IAGAM</span></h1>
-
   <p class="description">
     Tu espacio inteligente para encontrar información.
     Busca, explora y descubre nuevos conocimientos.
   </p>
 
   <div class="search">
-    <input
-      id="consulta"
-      type="search"
-      placeholder="¿Qué quieres saber?"
-    >
+    <input id="consulta" type="search"
+      placeholder="¿Qué quieres saber?">
     <button id="buscar" type="button">BUSCAR</button>
   </div>
 
   <p id="estado">
     Busca información en diferentes fuentes públicas.
   </p>
-
   <div id="resultados"></div>
 
   <div class="features">
-
     <div class="feature">
       <strong>🔎 BÚSQUEDA</strong>
       Consulta diferentes fuentes.
     </div>
-
     <div class="feature">
       <strong>🧠 CONOCIMIENTO</strong>
       Descubre nueva información.
     </div>
-
     <div class="feature">
       <strong>🚀 EVOLUCIÓN</strong>
       Nuevas funciones próximamente.
     </div>
-
   </div>
-
 </main>
 
 <footer>
@@ -241,14 +188,12 @@ footer {
 </footer>
 
 <script>
-
 const consulta = document.getElementById("consulta");
 const boton = document.getElementById("buscar");
 const resultados = document.getElementById("resultados");
 const estado = document.getElementById("estado");
 
 async function buscarInformacion() {
-
   const pregunta = consulta.value.trim();
 
   if (!pregunta) {
@@ -259,65 +204,74 @@ async function buscarInformacion() {
 
   boton.disabled = true;
   boton.textContent = "BUSCANDO...";
-  estado.textContent = "IAGAM está consultando sus fuentes...";
+  estado.textContent = "IAGAM está consultando Wikipedia...";
   resultados.replaceChildren();
 
-  const wikipediaURL =
-    "https://es.wikipedia.org/w/api.php?action=query&list=search&srsearch="
-    + encodeURIComponent(pregunta)
-    + "&format=json&origin=*";
-
-  const wikidataURL =
-    "https://www.wikidata.org/w/api.php?action=wbsearchentities&search="
-    + encodeURIComponent(pregunta)
-    + "&language=es&uselang=es&format=json&origin=*";
-
   try {
+    const wikipediaURL =
+      "https://es.wikipedia.org/w/api.php?action=query&list=search&srsearch="
+      + encodeURIComponent(pregunta)
+      + "&srlimit=5&format=json&origin=*";
 
-    const respuestas = await Promise.allSettled([
-      fetch(wikipediaURL).then(r => {
-        if (!r.ok) throw new Error("Wikipedia no disponible");
-        return r.json();
-      }),
-      fetch(wikidataURL).then(r => {
-        if (!r.ok) throw new Error("Wikidata no disponible");
-        return r.json();
-      })
-    ]);
+    const respuesta = await fetch(wikipediaURL);
 
-    const articulos = [];
-
-    if (respuestas[0].status === "fulfilled") {
-
-      const lista = respuestas[0].value.query.search;
-
-      lista.forEach(item => {
-        articulos.push({
-          titulo: item.title,
-          descripcion: item.snippet.replace(/<[^>]*>/g, ""),
-          enlace: "https://es.wikipedia.org/?curid=" + item.pageid,
-          fuente: "Wikipedia"
-        });
-      });
-
+    if (!respuesta.ok) {
+      throw new Error("Wikipedia no disponible");
     }
 
-    
-    if (articulos.length === 0) {
+    const datos = await respuesta.json();
+    const lista = datos.query.search || [];
+
+    if (lista.length === 0) {
       estado.textContent =
         "No encontramos resultados. Intenta otra búsqueda.";
       return;
     }
 
+    const ids = lista.map(item => item.pageid).join("|");
+
+    const contenidoURL =
+      "https://es.wikipedia.org/w/api.php?action=query&prop=extracts&explaintext=1&exchars=2500&pageids="
+      + ids
+      + "&format=json&origin=*";
+
+    const respuestaContenido = await fetch(contenidoURL);
+
+    if (!respuestaContenido.ok) {
+      throw new Error("No se pudo obtener el contenido");
+    }
+
+    const contenido = await respuestaContenido.json();
+    const paginas = contenido.query.pages;
+    const articulos = [];
+
+    lista.forEach(item => {
+      const pagina = paginas[item.pageid];
+
+      if (pagina && pagina.extract) {
+        articulos.push({
+          titulo: item.title,
+          descripcion: pagina.extract,
+          enlace: "https://es.wikipedia.org/?curid=" + item.pageid,
+          fuente: "Wikipedia en español"
+        });
+      }
+    });
+
+    if (articulos.length === 0) {
+      estado.textContent =
+        "No encontramos información completa para esa búsqueda.";
+      return;
+    }
+
     estado.textContent =
-      "IAGAM encontró " + articulos.length + " resultados.";
+      "IAGAM encontró " + articulos.length + " artículos con información.";
 
     const titulo = document.createElement("h2");
-    titulo.textContent = "Resultados de IAGAM";
+    titulo.textContent = "Información encontrada por IAGAM";
     resultados.appendChild(titulo);
 
     limpiarResultados(articulos).forEach(item => {
-
       const tarjeta = document.createElement("div");
       tarjeta.className = "resultado";
 
@@ -337,29 +291,17 @@ async function buscarInformacion() {
       enlace.target = "_blank";
       enlace.rel = "noopener noreferrer";
 
-      tarjeta.append(
-        fuente,
-        nombre,
-        descripcion,
-        enlace
-      );
-
+      tarjeta.append(fuente, nombre, descripcion, enlace);
       resultados.appendChild(tarjeta);
-
     });
 
   } catch (error) {
-
     estado.textContent =
       "Ocurrió un problema al realizar la búsqueda. Inténtalo de nuevo.";
-
   } finally {
-
     boton.disabled = false;
     boton.textContent = "BUSCAR";
-
   }
-
 }
 
 boton.addEventListener("click", buscarInformacion);
