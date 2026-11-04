@@ -302,21 +302,7 @@ async function buscarInformacion() {
 
     }
 
-    if (respuestas[1].status === "fulfilled") {
-
-      const lista = respuestas[1].value.search;
-
-      lista.forEach(item => {
-        articulos.push({
-          titulo: item.label,
-          descripcion: item.description || "Información disponible en Wikidata.",
-          enlace: item.concepturi,
-          fuente: "Wikidata"
-        });
-      });
-
-    }
-
+    
     if (articulos.length === 0) {
       estado.textContent =
         "No encontramos resultados. Intenta otra búsqueda.";
