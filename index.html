@@ -135,9 +135,11 @@ footer {
   </p>
 
   <div class="search">
-    <input type="text" placeholder="¿Qué quieres saber?">
-    <button type="button">BUSCAR</button>
-  </div>
+<input id="consulta" type="text" placeholder="¿Qué quieres saber?">
+<button id="buscar" type="button">BUSCAR</button>
+</div>
+
+<div id="resultados"></div>
 
   <p class="notice">
     Estamos preparando tu buscador inteligente.
@@ -162,6 +164,79 @@ footer {
 <footer>
   © 2026 IAGAM · Inteligencia que busca contigo
 </footer>
+
+
+<script>
+const consulta = document.getElementById("consulta");
+const boton = document.getElementById("buscar");
+const resultados = document.getElementById("resultados");
+
+async function buscarInformacion() {
+  const pregunta = consulta.value.trim();
+
+  if (!pregunta) {
+    resultados.textContent = "Escribe algo para buscar.";
+    return;
+  }
+
+  resultados.textContent = "IAGAM está buscando información...";
+
+  try {
+    const url = "https://es.wikipedia.org/w/api.php?action=query&list=search&srsearch="
+      + encodeURIComponent(pregunta)
+      + "&format=json&origin=*";
+
+    const respuesta = await fetch(url);
+    if (!respuesta.ok) throw new Error("Error de conexión");
+
+    const datos = await respuesta.json();
+    resultados.replaceChildren();
+
+    const lista = datos.query.search;
+
+    if (lista.length === 0) {
+      resultados.textContent = "No encontramos resultados.";
+      return;
+    }
+
+    const titulo = document.createElement("h2");
+    titulo.textContent = "Resultados de IAGAM";
+    resultados.appendChild(titulo);
+
+    lista.forEach(item => {
+      const tarjeta = document.createElement("div");
+      tarjeta.style.cssText =
+        "background:#151F36;padding:16px;margin:12px 0;border-radius:12px;text-align:left;border:1px solid #42547B";
+
+      const nombre = document.createElement("h3");
+      nombre.textContent = item.title;
+
+      const descripcion = document.createElement("p");
+      descripcion.textContent = item.snippet.replace(/<[^>]*>/g, "");
+
+      const enlace = document.createElement("a");
+      enlace.textContent = "Leer información completa";
+      enlace.href = "https://es.wikipedia.org/?curid=" + item.pageid;
+      enlace.target = "_blank";
+      enlace.rel = "noopener noreferrer";
+      enlace.style.color = "#51DFFF";
+
+      tarjeta.append(nombre, descripcion, enlace);
+      resultados.appendChild(tarjeta);
+    });
+
+  } catch (error) {
+    resultados.textContent =
+      "No pudimos realizar la búsqueda. Inténtalo nuevamente.";
+  }
+}
+
+boton.addEventListener("click", buscarInformacion);
+
+consulta.addEventListener("keydown", function(event) {
+  if (event.key === "Enter") buscarInformacion();
+});
+</script>
 
 </body>
 </html>
