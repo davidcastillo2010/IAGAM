@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -15,6 +16,8 @@ body{
  margin:0;font-family:Arial,sans-serif;background:#080D1B;
  color:#edf5ff;min-height:100vh;display:flex;flex-direction:column
 }
+
+/* BIENVENIDA */
 #intro{
  position:fixed;inset:0;z-index:99999;
  background:radial-gradient(ellipse at center,#102b49 0%,#080d1b 65%);
@@ -242,13 +245,6 @@ button{
  font-weight:bold;cursor:pointer
 }
 button:disabled{opacity:.5;cursor:not-allowed}
-.examples{
- display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
- margin-bottom:20px
-}
-.examples button{
- background:#142640;border:1px solid #294765;padding:10px;font-size:12px
-}
 .new-search{
  display:block;margin:0 auto 15px;padding:11px 16px;
  background:#142640;border:1px solid #294765
@@ -294,6 +290,7 @@ footer{text-align:center;padding:13px;color:#647c99;font-size:11px}
 
 <body>
 
+<!-- BIENVENIDA -->
 <section id="intro" aria-label="Bienvenido a IAGAM">
  <div class="intro-grid"></div>
  <div class="intro-content">
@@ -343,12 +340,8 @@ footer{text-align:center;padding:13px;color:#647c99;font-size:11px}
  <button type="button" id="translatorTab">🌎 Traductor</button>
 </div>
 
+<!-- BUSCAR INFORMACIÓN: SIN PREGUNTAS SUGERIDAS -->
 <section id="searchView" class="view active">
- <div class="examples" id="examples">
-  <button type="button" onclick="example('¿Para qué sirve el oxígeno?')">¿Para qué sirve el oxígeno?</button>
-  <button type="button" onclick="example('Explícame qué es la inteligencia artificial con palabras sencillas')">¿Qué es la IA?</button>
-  <button type="button" onclick="example('Hazme un resumen sobre el sistema solar')">Resumir el sistema solar</button>
- </div>
 
  <div class="controls">
   <label for="summaryLength">Extensión de la respuesta:</label>
@@ -369,6 +362,7 @@ footer{text-align:center;padding:13px;color:#647c99;font-size:11px}
  </form>
 </section>
 
+<!-- TRADUCTOR -->
 <section id="translatorView" class="view">
  <div class="translator-card">
   <h2>🌎 Traductor IAGAM</h2>
@@ -483,8 +477,10 @@ function showView(view){
  translatorView.classList.toggle("active",!isSearch);
  searchTab.classList.toggle("active",isSearch);
  translatorTab.classList.toggle("active",!isSearch);
+
  document.getElementById("welcome").querySelector("h1").textContent=
   isSearch?"¿Qué quieres descubrir?":"Traduce con IAGAM";
+
  document.getElementById("welcome").querySelector("p").textContent=
   isSearch
    ?"Busca información, aprende, resume textos o traduce entre español e inglés."
@@ -493,7 +489,7 @@ function showView(view){
 searchTab.addEventListener("click",()=>showView("search"));
 translatorTab.addEventListener("click",()=>showView("translator"));
 
-/* TRADUCTOR */
+/* TRADUCTOR ESPAÑOL - INGLÉS */
 const sourceLanguage=document.getElementById("sourceLanguage");
 const targetLanguage=document.getElementById("targetLanguage");
 const translationInput=document.getElementById("translationInput");
@@ -505,19 +501,27 @@ document.getElementById("swapLanguages").addEventListener("click",()=>{
  const oldSource=sourceLanguage.value;
  sourceLanguage.value=targetLanguage.value;
  targetLanguage.value=oldSource;
- const oldText=translationInput.value;
- translationInput.value=translationResult.textContent==="Aquí aparecerá tu traducción."
-  ?oldText:translationResult.textContent;
+
+ const currentResult=translationResult.textContent;
+ if(currentResult!=="Aquí aparecerá tu traducción."&&
+    currentResult!=="No se pudo obtener la traducción."){
+  translationInput.value=currentResult;
+ }else{
+  translationInput.value=translationInput.value;
+ }
+
  translationResult.textContent="Aquí aparecerá tu traducción.";
  translateStatus.textContent="";
 });
 
 async function translateText(){
  const text=translationInput.value.trim();
+
  if(!text){
   translateStatus.textContent="Escribe primero el texto que quieres traducir.";
   return;
  }
+
  if(text.length>4500){
   translateStatus.textContent="El texto es demasiado largo. Prueba con un texto de menos de 4500 caracteres.";
   return;
@@ -545,31 +549,48 @@ async function translateText(){
    "https://api.mymemory.translated.net/get?"+params.toString()
   );
 
-  if(!response.ok)throw new Error("Servicio no disponible");
+  if(!response.ok){
+   throw new Error("El servicio no está disponible.");
+  }
 
   const data=await response.json();
 
-  if(data.responseStatus!==200||!data.responseData?.translatedText){
-   throw new Error(data.responseDetails||"No se pudo traducir el texto.");
+  if(data.responseStatus!==200||
+     !data.responseData||
+     !data.responseData.translatedText){
+   throw new Error(data.responseDetails||"No se pudo traducir.");
   }
 
-  translationResult.textContent=data.responseData.translatedText;
+  const translated=data.responseData.translatedText;
+
+  if(!translated.trim()){
+   throw new Error("La traducción llegó vacía.");
+  }
+
+  translationResult.textContent=translated;
   translateStatus.textContent="Traducción completada.";
+
  }catch(error){
   translationResult.textContent="No se pudo obtener la traducción.";
-  translateStatus.textContent="Ocurrió un problema. Comprueba tu conexión o inténtalo más tarde. El servicio gratuito puede tener límites.";
+  translateStatus.textContent=
+   "No se pudo traducir. Comprueba tu conexión e inténtalo más tarde. El servicio gratuito puede tener límites.";
  }finally{
   translateButton.disabled=false;
  }
 }
+
 translateButton.addEventListener("click",translateText);
 
 document.getElementById("copyTranslation").addEventListener("click",async()=>{
  const text=translationResult.textContent;
- if(!text||text==="Aquí aparecerá tu traducción."||text==="No se pudo obtener la traducción."){
+
+ if(!text||
+    text==="Aquí aparecerá tu traducción."||
+    text==="No se pudo obtener la traducción."){
   translateStatus.textContent="Primero realiza una traducción.";
   return;
  }
+
  try{
   await navigator.clipboard.writeText(text);
   translateStatus.textContent="Traducción copiada.";
@@ -580,15 +601,21 @@ document.getElementById("copyTranslation").addEventListener("click",async()=>{
 
 document.getElementById("speakTranslation").addEventListener("click",()=>{
  const text=translationResult.textContent;
- if(!text||text==="Aquí aparecerá tu traducción."||text==="No se pudo obtener la traducción."){
+
+ if(!text||
+    text==="Aquí aparecerá tu traducción."||
+    text==="No se pudo obtener la traducción."){
   translateStatus.textContent="Primero realiza una traducción.";
   return;
  }
+
  if(!("speechSynthesis" in window)){
   translateStatus.textContent="La lectura en voz alta no está disponible en este navegador.";
   return;
  }
+
  window.speechSynthesis.cancel();
+
  const utterance=new SpeechSynthesisUtterance(text);
  utterance.lang=targetLanguage.value==="es"?"es-MX":"en-US";
  window.speechSynthesis.speak(utterance);
@@ -621,10 +648,12 @@ function normalize(text){
   .replace(/[^a-z0-9\s]/g," ")
   .replace(/\s+/g," ").trim();
 }
+
 function getWords(text){
  return normalize(text).split(" ")
   .filter(word=>word.length>2&&!stopWords.has(word));
 }
+
 function cleanQuery(text){
  let query=text.trim().replace(/[¿?¡!«»“”"]/g," ");
  query=query.replace(/^(hola[, ]*|por favor[, ]*)/i,"");
@@ -635,36 +664,38 @@ function cleanQuery(text){
  query=query.replace(/\s+(con palabras sencillas|en palabras sencillas|de forma sencilla|con ejemplos|por favor)$/i,"");
  return query.replace(/\s+/g," ").trim();
 }
+
 function wantsSummary(text){
  return /resumen|resume|resumir|resúmeme|sintetiza/i.test(text);
 }
+
 function wantsSimple(text){
  return /sencill|fácil|facil|simple|niños|ninos/i.test(text);
 }
-function example(text){
- input.value=text;
- form.requestSubmit();
-}
+
 function resetChat(){
  chat.innerHTML="";
  statusBox.textContent="";
- document.getElementById("welcome").style.display="";
- document.getElementById("examples").style.display="";
  document.getElementById("newSearch").hidden=true;
  input.focus();
 }
+
 function addMessage(text,type,sources=[]){
  const box=document.createElement("div");
  box.className="message "+type;
+
  const body=document.createElement("div");
  body.textContent=text;
  box.appendChild(body);
+
  if(sources.length){
   const area=document.createElement("div");
   area.className="sources";
+
   const title=document.createElement("strong");
   title.textContent="Fuentes consultadas:";
   area.appendChild(title);
+
   sources.forEach(source=>{
    const link=document.createElement("a");
    link.href=source.url;
@@ -673,53 +704,92 @@ function addMessage(text,type,sources=[]){
    link.textContent=source.title;
    area.appendChild(link);
   });
+
   box.appendChild(area);
  }
+
  chat.appendChild(box);
  box.scrollIntoView({behavior:"smooth",block:"end"});
 }
+
 function titleScore(queryWords,title){
  const titleWords=getWords(title);
  let matched=0;
+
  queryWords.forEach(word=>{
-  if(titleWords.some(t=>t===word||t.startsWith(word)||word.startsWith(t)))matched++;
+  if(titleWords.some(t=>t===word||t.startsWith(word)||word.startsWith(t))){
+   matched++;
+  }
  });
- return {matched,ratio:queryWords.length?matched/queryWords.length:0};
+
+ return {
+  matched,
+  ratio:queryWords.length?matched/queryWords.length:0
+ };
 }
+
 async function searchWikipedia(query){
  const params=new URLSearchParams({
-  action:"query",list:"search",srsearch:query,
-  srlimit:"12",srprop:"snippet",format:"json",origin:"*"
+  action:"query",
+  list:"search",
+  srsearch:query,
+  srlimit:"12",
+  srprop:"snippet",
+  format:"json",
+  origin:"*"
  });
- const response=await fetch("https://es.wikipedia.org/w/api.php?"+params);
+
+ const response=await fetch(
+  "https://es.wikipedia.org/w/api.php?"+params
+ );
+
  if(!response.ok)throw new Error("Error al buscar");
+
  const data=await response.json();
  return data.query?.search||[];
 }
+
 async function getArticle(pageid){
  const params=new URLSearchParams({
-  action:"query",pageids:String(pageid),prop:"extracts",
-  explaintext:"1",exintro:"1",exchars:"9000",
-  format:"json",origin:"*"
+  action:"query",
+  pageids:String(pageid),
+  prop:"extracts",
+  explaintext:"1",
+  exintro:"1",
+  exchars:"9000",
+  format:"json",
+  origin:"*"
  });
- const response=await fetch("https://es.wikipedia.org/w/api.php?"+params);
+
+ const response=await fetch(
+  "https://es.wikipedia.org/w/api.php?"+params
+ );
+
  if(!response.ok)throw new Error("Error al cargar el artículo");
+
  const data=await response.json();
  const page=data.query?.pages?.[pageid];
+
  if(!page||!page.extract)return null;
+
  return {
-  title:page.title,extract:page.extract,
+  title:page.title,
+  extract:page.extract,
   url:"https://es.wikipedia.org/?curid="+pageid
  };
 }
+
 function splitIntro(extract){
- return extract.split(/\n+/).map(p=>p.trim())
+ return extract.split(/\n+/)
+  .map(p=>p.trim())
   .filter(p=>p.length>45)
   .map(p=>p.replace(/\[[0-9]+\]/g,"")
-   .split(/(?<=[.!?])\s+/).map(s=>s.trim())
+   .split(/(?<=[.!?])\s+/)
+   .map(s=>s.trim())
    .filter(s=>s.length>35&&s.length<650))
   .filter(group=>group.length);
 }
+
 function simplifySentence(sentence){
  return sentence
   .replace(/\b(utiliza|emplea|mediante)\b/gi,"usa")
@@ -727,80 +797,130 @@ function simplifySentence(sentence){
   .replace(/\bconstituye\b/gi,"es")
   .replace(/\bposteriormente\b/gi,"después");
 }
+
 function makeAnswer(original,article){
  const paragraphs=splitIntro(article.extract);
+
  if(!paragraphs.length){
   return "Encontré el artículo, pero no pude obtener una introducción suficiente para preparar un resumen fiable. Consulta la fuente original.";
  }
+
  const simple=wantsSimple(original);
  const length=summaryLength.value;
- let definitionCount=1,featureCount=2,dataCount=1;
- if(length==="short"){definitionCount=1;featureCount=1;dataCount=0}
- else if(length==="long"){definitionCount=2;featureCount=5;dataCount=3}
+
+ let definitionCount=1;
+ let featureCount=2;
+ let dataCount=1;
+
+ if(length==="short"){
+  definitionCount=1;
+  featureCount=1;
+  dataCount=0;
+ }else if(length==="long"){
+  definitionCount=2;
+  featureCount=5;
+  dataCount=3;
+ }
 
  const firstParagraph=paragraphs[0];
  const definition=firstParagraph.slice(0,definitionCount);
  let remaining=firstParagraph.slice(definition.length);
- for(let i=1;i<paragraphs.length;i++)remaining=remaining.concat(paragraphs[i]);
+
+ for(let i=1;i<paragraphs.length;i++){
+  remaining=remaining.concat(paragraphs[i]);
+ }
+
  const features=remaining.slice(0,featureCount);
  const data=remaining.slice(featureCount,featureCount+dataCount);
  const format=s=>simple?simplifySentence(s):s;
 
  let answer=(wantsSummary(original)?"RESUMEN: ":"INFORMACIÓN: ")+article.title+"\n\n";
- answer+="¿QUÉ ES?\n"+definition.map(format).join(" ")+"\n\n";
+
+ answer+="¿QUÉ ES?\n";
+ answer+=definition.map(format).join(" ")+"\n\n";
+
  if(features.length){
   answer+="CARACTERÍSTICAS PRINCIPALES\n";
   features.forEach(s=>answer+="• "+format(s)+"\n\n");
  }
+
  if(data.length){
   answer+="OTROS DATOS IMPORTANTES\n";
   data.forEach(s=>answer+="• "+format(s)+"\n\n");
  }
+
  answer+="CONCLUSIÓN\n";
  answer+="Según la introducción consultada, estos son los conceptos principales de "+article.title+". Puedes abrir la fuente para leer el contenido completo y comprobar los detalles.";
+
  answer+="\n\nNota: IAGAM organiza información de fuentes públicas. El resumen se basa en el texto consultado y puede necesitar verificación adicional.";
+
  return answer.trim();
 }
+
 async function ask(question){
- document.getElementById("welcome").style.display="none";
- document.getElementById("examples").style.display="none";
- document.getElementById("newSearch").hidden=false;
  addMessage(question,"user");
+ document.getElementById("newSearch").hidden=false;
  send.disabled=true;
  statusBox.textContent="Analizando tu pregunta...";
+
  try{
   const query=cleanQuery(question);
   const queryWords=getWords(query);
+
   if(!query||!queryWords.length){
    addMessage("Escribe un tema más específico para buscar información.","bot");
    return;
   }
+
   statusBox.textContent="Buscando información relacionada...";
+
   const results=await searchWikipedia(query);
+
   if(!results.length){
    addMessage("No encontré resultados para ese tema. Intenta con otras palabras.","bot");
    return;
   }
+
   const candidates=results.map(item=>({
-   ...item,relevance:titleScore(queryWords,item.title)
-  })).filter(item=>item.relevance.matched>0)
-   .sort((a,b)=>b.relevance.ratio-a.relevance.ratio||b.relevance.matched-a.relevance.matched);
+   ...item,
+   relevance:titleScore(queryWords,item.title)
+  }))
+  .filter(item=>item.relevance.matched>0)
+  .sort((a,b)=>
+   b.relevance.ratio-a.relevance.ratio||
+   b.relevance.matched-a.relevance.matched
+  );
+
   if(!candidates.length){
    addMessage("Encontré resultados, pero sus títulos no coinciden suficientemente con el tema. Intenta escribirlo de otra manera.","bot");
    return;
   }
+
   statusBox.textContent="Revisando la introducción del artículo...";
+
   const articles=await Promise.all(
-   candidates.slice(0,5).map(item=>getArticle(item.pageid).catch(()=>null))
+   candidates.slice(0,5).map(item=>
+    getArticle(item.pageid).catch(()=>null)
+   )
   );
-  const valid=articles.filter(a=>a&&a.extract&&a.extract.length>80);
+
+  const valid=articles.filter(a=>
+   a&&a.extract&&a.extract.length>80
+  );
+
   if(!valid.length){
    addMessage("No pude obtener una introducción suficiente de las fuentes encontradas. Intenta de nuevo más tarde.","bot");
    return;
   }
+
   const best=valid[0];
-  const sourceList=valid.slice(0,3).map(a=>({title:a.title,url:a.url}));
+  const sourceList=valid.slice(0,3).map(a=>({
+   title:a.title,
+   url:a.url
+  }));
+
   addMessage(makeAnswer(question,best),"bot",sourceList);
+
  }catch(error){
   addMessage("No pude consultar las fuentes en este momento. Comprueba tu conexión e inténtalo de nuevo.","bot");
  }finally{
@@ -809,6 +929,7 @@ async function ask(question){
   input.focus();
  }
 }
+
 form.addEventListener("submit",event=>{
  event.preventDefault();
  const question=input.value.trim();
@@ -816,12 +937,14 @@ form.addEventListener("submit",event=>{
  input.value="";
  ask(question);
 });
+
 input.addEventListener("keydown",event=>{
  if(event.key==="Enter"&&!event.shiftKey){
   event.preventDefault();
   form.requestSubmit();
  }
 });
+
 if("serviceWorker" in navigator){
  window.addEventListener("load",()=>{
   navigator.serviceWorker.register("./service-worker.js")
