@@ -49,14 +49,8 @@ main{
  text-align:center;
  margin:35px 0 22px
 }
-.welcome h1{
- font-size:25px;
- color:#fff
-}
-.welcome p{
- color:#9aacc5;
- line-height:1.6
-}
+.welcome h1{font-size:25px;color:#fff}
+.welcome p{color:#9aacc5;line-height:1.6}
 #chat{
  display:flex;
  flex-direction:column;
@@ -190,20 +184,13 @@ footer{
 <div id="status"></div>
 
 <form id="form">
- <textarea
-  id="question"
-  placeholder="Escribe tu pregunta..."
-  rows="1"
-  required
- ></textarea>
+ <textarea id="question" placeholder="Escribe tu pregunta..." rows="1" required></textarea>
  <button id="send" type="submit">Enviar</button>
 </form>
 
 </main>
 
-<footer>
- IAGAM · Información consultada en fuentes abiertas
-</footer>
+<footer>IAGAM · Información consultada en fuentes abiertas</footer>
 
 <script>
 const chat=document.getElementById("chat");
@@ -220,8 +207,8 @@ const stopWords=new Set([
  "muy","cuando","donde","cual","quien","porque",
  "todo","toda","todos","todas","hazme","haz","resumen",
  "resume","resumir","resumeme","explicame","explica",
- "dime","quiero","saber","informacion","información",
- "tema","favor","por"
+ "dime","quiero","saber","informacion","tema","favor",
+ "por","acerca","dame","necesito"
 ]);
 
 function normalize(text){
@@ -245,8 +232,7 @@ function cleanQuery(text){
  query=query.replace(/[¿?¡!«»“”"]/g," ");
 
  query=query.replace(
-  /^(hola[, ]*|por favor[, ]*)/i,
-  ""
+  /^(hola[, ]*|por favor[, ]*)/i,""
  );
 
  query=query.replace(
@@ -373,9 +359,7 @@ async function searchWikipedia(query){
   "https://es.wikipedia.org/w/api.php?"+params
  );
 
- if(!response.ok){
-  throw new Error("Error al buscar en Wikipedia");
- }
+ if(!response.ok)throw new Error("Error al buscar");
 
  const data=await response.json();
  return data.query?.search||[];
@@ -388,7 +372,7 @@ async function getArticle(pageid){
   prop:"extracts",
   explaintext:"1",
   exintro:"1",
-  exchars:"3500",
+  exchars:"4500",
   format:"json",
   origin:"*"
  });
@@ -397,9 +381,7 @@ async function getArticle(pageid){
   "https://es.wikipedia.org/w/api.php?"+params
  );
 
- if(!response.ok){
-  throw new Error("No se pudo cargar el artículo");
- }
+ if(!response.ok)throw new Error("Error al cargar el artículo");
 
  const data=await response.json();
  const page=data.query?.pages?.[pageid];
@@ -420,9 +402,7 @@ function articleMatches(queryWords,article){
   article.extract.slice(0,1200)
  );
 
- if(queryWords.length===1){
-  return result.matched>=1;
- }
+ if(queryWords.length===1)return result.matched>=1;
 
  return result.ratio>=0.5;
 }
@@ -436,81 +416,135 @@ function splitSentences(text){
   );
 }
 
-function makeAnswer(original,article){
- const summary=wantsSummary(original);
- const simple=wantsSimple(original);
+function scoreSentence(sentence,index,queryWords){
+ const words=new Set(getWords(sentence));
+ let score=0;
 
- const queryWords=getWords(cleanQuery(original));
+ queryWords.forEach(word=>{
+  if(words.has(word))score+=3;
+ });
 
- const sentences=splitSentences(article.extract);
+ score+=Math.max(0,1.5-index*0.1);
 
- if(!sentences.length){
-  return "Encontré el artículo, pero no pude organizar sus ideas. Puedes consultar la fuente completa.";
+ if(sentence.length<180)score+=0.5;
+
+ if(/es un|es una|se define|está formado|esta formado|consiste en/i.test(sentence)){
+  score+=1.5;
  }
 
- const ranked=sentences.map((sentence,index)=>{
-  const words=new Set(getWords(sentence));
-  let score=0;
+ return {sentence,index,score,words};
+}
 
-  queryWords.forEach(word=>{
-   if(words.has(word)){
-    score+=3;
-   }
-  });
-
-  score+=Math.max(0,1-index*0.08);
-
-  if(sentence.length<150)score+=0.4;
-
-  return {sentence,index,score,words};
- }).sort((a,b)=>b.score-a.score);
+function selectSentences(sentences,queryWords,limit,used=[]){
+ const ranked=sentences.map((sentence,index)=>
+  scoreSentence(sentence,index,queryWords)
+ ).sort((a,b)=>b.score-a.score);
 
  const selected=[];
 
  for(const item of ranked){
-  const duplicate=selected.some(old=>{
-   const common=[...item.words].filter(
-    word=>old.words.has(word)
-   ).length;
-
-   const smaller=Math.min(
-    item.words.size,
-    old.words.size
-   )||1;
-
-   return common/smaller>0.7;
+  const duplicate=[...used,...selected].some(old=>{
+   const common=[...item.words].filter(w=>old.words.has(w)).length;
+   const smaller=Math.min(item.words.size,old.words.size)||1;
+   return common/smaller>0.68;
   });
 
   if(!duplicate)selected.push(item);
-
-  if(selected.length>=(summary?3:4))break;
+  if(selected.length>=limit)break;
  }
 
- selected.sort((a,b)=>a.index-b.index);
+ return selected;
+}
 
- let answer=summary
-  ?"Resumen de las ideas principales: "
-  :simple
-  ?"Explicación sencilla basada en la fuente: "
-  :"Información encontrada: ";
+function makeAnswer(original,article){
+ const simple=wantsSimple(original);
+ const queryWords=getWords(cleanQuery(original));
+ const sentences=splitSentences(article.extract);
 
- answer+=article.title+"\n\n";
+ if(!sentences.length){
+  return "Encontré el artículo, pero no pude organizar sus ideas. Consulta la fuente completa.";
+ }
 
- selected.forEach((item,index)=>{
-  let sentence=item.sentence;
+ const introCandidates=sentences.slice(0,4);
 
-  if(simple){
-   sentence=sentence
-    .replace(/\b(utiliza|emplea|mediante)\b/gi,"usa")
-    .replace(/\bdenominado\b/gi,"llamado")
-    .replace(/\bconstituye\b/gi,"es");
-  }
+ let intro=introCandidates.find(sentence=>
+  /es un|es una|se define|está formado|esta formado|consiste en/i.test(sentence)
+ );
 
-  answer+=(summary?"• ":(index+1)+". ");
-  answer+=sentence+"\n\n";
- });
+ if(!intro)intro=introCandidates[0];
 
- answer+="\nEste contenido está organizado a partir de la fuente consultada. Puede omitir detalles.";
+ const introItem=scoreSentence(
+  intro,
+  sentences.indexOf(intro),
+  queryWords
+ );
+
+ const remaining=sentences.filter(s=>s!==intro);
+
+ const features=selectSentences(
+  remaining,
+  queryWords,
+  2,
+  [introItem]
+ );
+
+ const used=[introItem,...features];
+
+ const important=selectSentences(
+  remaining,
+  queryWords,
+  1,
+  used
+ );
+
+ const chosenFeatures=features.filter(item=>
+  !important.some(other=>other.sentence===item.sentence)
+ );
+
+ function simplify(sentence){
+  if(!simple)return sentence;
+
+  return sentence
+   .replace(/\b(utiliza|emplea|mediante)\b/gi,"usa")
+   .replace(/\bdenominado\b/gi,"llamado")
+   .replace(/\bconstituye\b/gi,"es");
+ }
+
+ let answer="";
+
+ if(wantsSummary(original)){
+  answer="RESUMEN: "+article.title+"\n\n";
+ }else{
+  answer="INFORMACIÓN: "+article.title+"\n\n";
+ }
+
+ answer+="¿QUÉ ES?\n";
+ answer+=simplify(intro)+"\n\n";
+
+ answer+="CARACTERÍSTICAS PRINCIPALES\n";
+
+ if(chosenFeatures.length){
+  chosenFeatures.forEach(item=>{
+   answer+="• "+simplify(item.sentence)+"\n\n";
+  });
+ }else{
+  answer+="La fuente no ofrece suficientes características adicionales en su introducción.\n\n";
+ }
+
+ answer+="DATOS IMPORTANTES\n";
+
+ if(important.length){
+  important.forEach(item=>{
+   answer+="• "+simplify(item.sentence)+"\n\n";
+  });
+ }else{
+  answer+="Consulta la fuente para ampliar los detalles.\n\n";
+ }
+
+ answer+="CONCLUSIÓN\n";
+ answer+="La información anterior reúne las ideas principales del artículo consultado sobre "+article.title+". Para conocer más detalles, revisa la fuente original.";
+
+ answer+="\n\nNota: IAGAM organiza información de Wikipedia. No genera todavía respuestas propias como una IA conversacional.";
 
  return answer.trim();
 }
@@ -530,7 +564,7 @@ async function ask(question){
 
   if(!query||!queryWords.length){
    addMessage(
-    "Escribe un tema más específico para poder buscar información.",
+    "Escribe un tema más específico para buscar información.",
     "bot"
    );
    return;
@@ -542,7 +576,7 @@ async function ask(question){
 
   if(!results.length){
    addMessage(
-    "No encontré información para ese tema. Intenta expresarlo con otras palabras.",
+    "No encontré información para ese tema. Intenta con otras palabras.",
     "bot"
    );
    return;
@@ -558,19 +592,14 @@ async function ask(question){
    return {...item,relevance};
   })
   .filter(item=>{
-   if(queryWords.length===1){
-    return item.relevance.matched>=1;
-   }
-
+   if(queryWords.length===1)return item.relevance.matched>=1;
    return item.relevance.ratio>=0.5;
   })
-  .sort((a,b)=>
-   b.relevance.score-a.relevance.score
-  );
+  .sort((a,b)=>b.relevance.score-a.relevance.score);
 
   if(!candidates.length){
    addMessage(
-    "Encontré resultados, pero no pude confirmar que correspondan a tu pregunta. Prueba con un tema más específico.",
+    "Encontré resultados, pero no pude confirmar que correspondan a tu pregunta. Intenta expresarla de otra manera.",
     "bot"
    );
    return;
@@ -579,19 +608,16 @@ async function ask(question){
   statusBox.textContent="Comprobando los artículos encontrados...";
 
   const articles=await Promise.all(
-   candidates.slice(0,5).map(item=>
-    getArticle(item.pageid)
-   )
+   candidates.slice(0,5).map(item=>getArticle(item.pageid))
   );
 
-  const relevant=articles
-   .filter(article=>
-    article&&articleMatches(queryWords,article)
-   );
+  const relevant=articles.filter(article=>
+   article&&articleMatches(queryWords,article)
+  );
 
   if(!relevant.length){
    addMessage(
-    "No encontré un artículo suficientemente relacionado con tu pregunta. No quiero darte información equivocada. Intenta escribirla de otra manera.",
+    "No encontré un artículo suficientemente relacionado con tu pregunta. No quiero darte información equivocada.",
     "bot"
    );
    return;
@@ -613,7 +639,6 @@ async function ask(question){
    "No pude consultar las fuentes en este momento. Comprueba tu conexión e inténtalo de nuevo.",
    "bot"
   );
-
  }finally{
   statusBox.textContent="";
   send.disabled=false;
@@ -625,7 +650,6 @@ form.addEventListener("submit",event=>{
  event.preventDefault();
 
  const question=input.value.trim();
-
  if(!question)return;
 
  input.value="";
