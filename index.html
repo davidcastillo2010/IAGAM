@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080D1B">
+<meta name="description" content="IAGAM busca información, organiza explicaciones y muestra sus fuentes.">
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
 <title>IAGAM - Inteligencia que busca contigo</title>
@@ -60,7 +61,7 @@ main{
 .message{
  padding:15px;
  border-radius:15px;
- line-height:1.6;
+ line-height:1.65;
  white-space:pre-wrap;
  overflow-wrap:anywhere
 }
@@ -76,21 +77,39 @@ main{
  align-self:stretch
 }
 .sources{
- margin-top:12px;
+ margin-top:14px;
  border-top:1px solid #30415a;
- padding-top:10px
+ padding-top:12px
 }
 .sources strong{color:#43d8ff}
 .sources a{
  color:#55d9ff;
  display:block;
- margin:8px 0;
+ margin:9px 0;
  overflow-wrap:anywhere
 }
 #status{
  color:#9aacc5;
  font-size:13px;
- padding:8px
+ padding:8px;
+ min-height:28px
+}
+.controls{
+ display:flex;
+ align-items:center;
+ gap:9px;
+ margin:8px 0 12px;
+ flex-wrap:wrap;
+ color:#9aacc5;
+ font-size:13px
+}
+select{
+ background:#111e33;
+ color:#edf5ff;
+ border:1px solid #315174;
+ border-radius:10px;
+ padding:9px;
+ font-size:14px
 }
 form{
  position:sticky;
@@ -139,11 +158,30 @@ button:disabled{opacity:.5}
  padding:10px;
  font-size:12px
 }
+.new-search{
+ display:block;
+ margin:0 auto 15px;
+ padding:11px 16px;
+ background:#142640;
+ border:1px solid #294765
+}
+.note{
+ color:#8fa5c2;
+ font-size:12px;
+ line-height:1.5;
+ margin-top:10px
+}
 footer{
  text-align:center;
  padding:13px;
  color:#647c99;
  font-size:11px
+}
+@media(max-width:500px){
+ main{padding:14px}
+ .welcome{margin-top:25px}
+ form{gap:7px}
+ form button{padding:0 14px}
 }
 </style>
 </head>
@@ -161,8 +199,8 @@ footer{
  <h1>¿Qué quieres descubrir?</h1>
  <p>
   Pregunta, investiga, aprende o solicita un resumen.
-  <br>
-  IAGAM buscará información y te mostrará sus fuentes.
+  IAGAM buscará información y organizará los resultados
+  para ayudarte a comprenderlos.
  </p>
 </section>
 
@@ -170,18 +208,29 @@ footer{
  <button type="button" onclick="example('¿Para qué sirve el oxígeno?')">
   ¿Para qué sirve el oxígeno?
  </button>
-
  <button type="button" onclick="example('Explícame qué es la inteligencia artificial con palabras sencillas')">
   ¿Qué es la IA?
  </button>
-
  <button type="button" onclick="example('Hazme un resumen sobre el sistema solar')">
   Resumir el sistema solar
  </button>
 </div>
 
+<div class="controls">
+ <label for="summaryLength">Extensión de la respuesta:</label>
+ <select id="summaryLength">
+  <option value="short">Corta</option>
+  <option value="normal" selected>Normal</option>
+  <option value="long">Detallada</option>
+ </select>
+</div>
+
+<button class="new-search" id="newSearch" type="button" hidden onclick="resetChat()">
+ Nueva búsqueda
+</button>
+
 <section id="chat" aria-live="polite"></section>
-<div id="status"></div>
+<div id="status" role="status"></div>
 
 <form id="form">
  <textarea id="question" placeholder="Escribe tu pregunta..." rows="1" required></textarea>
@@ -190,7 +239,9 @@ footer{
 
 </main>
 
-<footer>IAGAM · Información consultada en fuentes abiertas</footer>
+<footer>
+ IAGAM · Información consultada en fuentes abiertas
+</footer>
 
 <script>
 const chat=document.getElementById("chat");
@@ -198,6 +249,7 @@ const form=document.getElementById("form");
 const input=document.getElementById("question");
 const send=document.getElementById("send");
 const statusBox=document.getElementById("status");
+const summaryLength=document.getElementById("summaryLength");
 
 const stopWords=new Set([
  "que","para","con","por","una","uno","unos","unas",
@@ -208,7 +260,8 @@ const stopWords=new Set([
  "todo","toda","todos","todas","hazme","haz","resumen",
  "resume","resumir","resumeme","explicame","explica",
  "dime","quiero","saber","informacion","tema","favor",
- "por","acerca","dame","necesito"
+ "acerca","dame","necesito","es","un","de","la","el",
+ "al","en","y","o","a","se","su","mi","me","lo"
 ]);
 
 function normalize(text){
@@ -276,6 +329,15 @@ function example(text){
  form.requestSubmit();
 }
 
+function resetChat(){
+ chat.innerHTML="";
+ statusBox.textContent="";
+ document.getElementById("welcome").style.display="";
+ document.getElementById("examples").style.display="";
+ document.getElementById("newSearch").hidden=true;
+ input.focus();
+}
+
 function addMessage(text,type,sources=[]){
  const box=document.createElement("div");
  box.className="message "+type;
@@ -319,7 +381,7 @@ function relevanceScore(queryWords,title,snippet=""){
   let found=false;
 
   if(titleWords.has(word)){
-   score+=5;
+   score+=6;
    found=true;
   }else if(
    [...titleWords].some(w=>
@@ -350,7 +412,8 @@ async function searchWikipedia(query){
   action:"query",
   list:"search",
   srsearch:query,
-  srlimit:"10",
+  srlimit:"12",
+  srprop:"snippet",
   format:"json",
   origin:"*"
  });
@@ -371,8 +434,7 @@ async function getArticle(pageid){
   pageids:String(pageid),
   prop:"extracts",
   explaintext:"1",
-  exintro:"1",
-  exchars:"4500",
+  exchars:"9000",
   format:"json",
   origin:"*"
  });
@@ -399,20 +461,24 @@ function articleMatches(queryWords,article){
  const result=relevanceScore(
   queryWords,
   article.title,
-  article.extract.slice(0,1200)
+  article.extract.slice(0,3000)
  );
 
  if(queryWords.length===1)return result.matched>=1;
 
- return result.ratio>=0.5;
+ return result.ratio>=0.35;
 }
 
 function splitSentences(text){
- return text.replace(/\s+/g," ")
+ return text
+  .replace(/\[[0-9]+\]/g,"")
+  .replace(/\s+/g," ")
   .split(/(?<=[.!?])\s+/)
   .map(sentence=>sentence.trim())
   .filter(sentence=>
-   sentence.length>45&&sentence.length<450
+   sentence.length>45&&
+   sentence.length<600&&
+   !/^(referencias|bibliografía|bibliografia|enlaces externos|véase también|vease tambien)/i.test(sentence)
   );
 }
 
@@ -422,14 +488,21 @@ function scoreSentence(sentence,index,queryWords){
 
  queryWords.forEach(word=>{
   if(words.has(word))score+=3;
+  else if([...words].some(w=>w.startsWith(word)||word.startsWith(w))){
+   score+=1;
+  }
  });
 
- score+=Math.max(0,1.5-index*0.1);
+ score+=Math.max(0,1.5-index*0.035);
 
- if(sentence.length<180)score+=0.5;
+ if(sentence.length<220)score+=0.5;
 
  if(/es un|es una|se define|está formado|esta formado|consiste en/i.test(sentence)){
   score+=1.5;
+ }
+
+ if(/por ejemplo|sin embargo|además|ademas|también|tambien/i.test(sentence)){
+  score+=0.3;
  }
 
  return {sentence,index,score,words};
@@ -456,6 +529,14 @@ function selectSentences(sentences,queryWords,limit,used=[]){
  return selected;
 }
 
+function simplifySentence(sentence){
+ return sentence
+  .replace(/\b(utiliza|emplea|mediante)\b/gi,"usa")
+  .replace(/\bdenominado\b/gi,"llamado")
+  .replace(/\bconstituye\b/gi,"es")
+  .replace(/\bposteriormente\b/gi,"después");
+}
+
 function makeAnswer(original,article){
  const simple=wantsSimple(original);
  const queryWords=getWords(cleanQuery(original));
@@ -465,7 +546,20 @@ function makeAnswer(original,article){
   return "Encontré el artículo, pero no pude organizar sus ideas. Consulta la fuente completa.";
  }
 
- const introCandidates=sentences.slice(0,4);
+ const length=summaryLength.value;
+
+ let featureCount=2;
+ let importantCount=1;
+
+ if(length==="short"){
+  featureCount=1;
+  importantCount=0;
+ }else if(length==="long"){
+  featureCount=5;
+  importantCount=3;
+ }
+
+ const introCandidates=sentences.slice(0,6);
 
  let intro=introCandidates.find(sentence=>
   /es un|es una|se define|está formado|esta formado|consiste en/i.test(sentence)
@@ -484,7 +578,7 @@ function makeAnswer(original,article){
  const features=selectSentences(
   remaining,
   queryWords,
-  2,
+  featureCount,
   [introItem]
  );
 
@@ -493,58 +587,40 @@ function makeAnswer(original,article){
  const important=selectSentences(
   remaining,
   queryWords,
-  1,
+  importantCount,
   used
  );
 
- const chosenFeatures=features.filter(item=>
-  !important.some(other=>other.sentence===item.sentence)
- );
+ const formatSentence=sentence=>
+  simple?simplifySentence(sentence):sentence;
 
- function simplify(sentence){
-  if(!simple)return sentence;
-
-  return sentence
-   .replace(/\b(utiliza|emplea|mediante)\b/gi,"usa")
-   .replace(/\bdenominado\b/gi,"llamado")
-   .replace(/\bconstituye\b/gi,"es");
- }
-
- let answer="";
-
- if(wantsSummary(original)){
-  answer="RESUMEN: "+article.title+"\n\n";
- }else{
-  answer="INFORMACIÓN: "+article.title+"\n\n";
- }
+ let answer=wantsSummary(original)
+  ?"RESUMEN: "+article.title+"\n\n"
+  :"INFORMACIÓN: "+article.title+"\n\n";
 
  answer+="¿QUÉ ES?\n";
- answer+=simplify(intro)+"\n\n";
+ answer+=formatSentence(intro)+"\n\n";
 
- answer+="CARACTERÍSTICAS PRINCIPALES\n";
+ if(features.length){
+  answer+="CARACTERÍSTICAS PRINCIPALES\n";
 
- if(chosenFeatures.length){
-  chosenFeatures.forEach(item=>{
-   answer+="• "+simplify(item.sentence)+"\n\n";
+  features.forEach(item=>{
+   answer+="• "+formatSentence(item.sentence)+"\n\n";
   });
- }else{
-  answer+="La fuente no ofrece suficientes características adicionales en su introducción.\n\n";
  }
 
- answer+="DATOS IMPORTANTES\n";
-
  if(important.length){
+  answer+="DATOS IMPORTANTES\n";
+
   important.forEach(item=>{
-   answer+="• "+simplify(item.sentence)+"\n\n";
+   answer+="• "+formatSentence(item.sentence)+"\n\n";
   });
- }else{
-  answer+="Consulta la fuente para ampliar los detalles.\n\n";
  }
 
  answer+="CONCLUSIÓN\n";
- answer+="La información anterior reúne las ideas principales del artículo consultado sobre "+article.title+". Para conocer más detalles, revisa la fuente original.";
+ answer+="La información consultada reúne algunos de los puntos principales sobre "+article.title+". Puedes abrir las fuentes para profundizar y comprobar los detalles.";
 
- answer+="\n\nNota: IAGAM organiza información de Wikipedia. No genera todavía respuestas propias como una IA conversacional.";
+ answer+="\n\nNota: IAGAM organiza información de fuentes públicas. Sus respuestas se basan en los artículos consultados y no son una opinión ni una verificación independiente.";
 
  return answer.trim();
 }
@@ -552,6 +628,7 @@ function makeAnswer(original,article){
 async function ask(question){
  document.getElementById("welcome").style.display="none";
  document.getElementById("examples").style.display="none";
+ document.getElementById("newSearch").hidden=false;
 
  addMessage(question,"user");
 
@@ -570,13 +647,13 @@ async function ask(question){
    return;
   }
 
-  statusBox.textContent="Buscando resultados relacionados...";
+  statusBox.textContent="Buscando información relacionada...";
 
   const results=await searchWikipedia(query);
 
   if(!results.length){
    addMessage(
-    "No encontré información para ese tema. Intenta con otras palabras.",
+    "No encontré resultados para ese tema. Intenta con otras palabras o escribe el nombre del tema de forma más específica.",
     "bot"
    );
    return;
@@ -593,7 +670,7 @@ async function ask(question){
   })
   .filter(item=>{
    if(queryWords.length===1)return item.relevance.matched>=1;
-   return item.relevance.ratio>=0.5;
+   return item.relevance.ratio>=0.35;
   })
   .sort((a,b)=>b.relevance.score-a.relevance.score);
 
@@ -605,10 +682,12 @@ async function ask(question){
    return;
   }
 
-  statusBox.textContent="Comprobando los artículos encontrados...";
+  statusBox.textContent="Leyendo y comparando los artículos...";
 
   const articles=await Promise.all(
-   candidates.slice(0,5).map(item=>getArticle(item.pageid))
+   candidates.slice(0,6).map(item=>
+    getArticle(item.pageid).catch(()=>null)
+   )
   );
 
   const relevant=articles.filter(article=>
