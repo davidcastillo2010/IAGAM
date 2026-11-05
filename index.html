@@ -4,11 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080D1B">
-<meta name="description" content="IAGAM busca información, organiza explicaciones y traduce textos.">
+<meta name="description" content="IAGAM busca información y organiza explicaciones.">
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
 <title>IAGAM - Inteligencia que busca contigo</title>
-
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#080D1B;color:#edf5ff;min-height:100vh;display:flex;flex-direction:column}
@@ -72,7 +71,7 @@ main{width:100%;max-width:850px;margin:auto;padding:20px;flex:1;display:flex;fle
 .sources{margin-top:14px;border-top:1px solid #30415a;padding-top:12px}
 .sources strong{color:#43d8ff}
 .sources a{color:#55d9ff;display:block;margin:9px 0;overflow-wrap:anywhere}
-#status,#translateStatus{color:#9aacc5;font-size:13px;padding:8px;min-height:28px}
+#status{color:#9aacc5;font-size:13px;padding:8px;min-height:28px}
 .controls{display:flex;align-items:center;gap:9px;margin:8px 0 12px;flex-wrap:wrap;color:#9aacc5;font-size:13px}
 select{background:#111e33;color:#edf5ff;border:1px solid #315174;border-radius:10px;padding:11px;font-size:14px;max-width:100%}
 form{display:flex;gap:9px}
@@ -81,23 +80,12 @@ textarea:focus{border-color:#42d9ff}
 button{border:0;border-radius:13px;padding:12px 19px;background:#12a9d5;color:white;font-size:15px;font-weight:bold;cursor:pointer}
 button:disabled{opacity:.5;cursor:not-allowed}
 .new-search{display:block;margin:0 auto 15px;padding:11px 16px;background:#142640;border:1px solid #294765}
-.translator-card{background:#111e33;border:1px solid #294765;border-radius:16px;padding:16px;margin-bottom:16px}
-.translator-card h2{margin-top:0;color:#42d9ff;font-size:21px}
-.language-row{display:flex;align-items:center;gap:9px;margin:15px 0}
-.language-row select{flex:1;min-width:0}
-.swap-button{padding:10px 13px;border-radius:50%;background:#173b60;border:1px solid #42d9ff}
-.translate-button{width:100%;margin-top:13px}
-.result-label{color:#42d9ff;font-weight:bold;margin:18px 0 8px}
-.result-box{background:#080d1b;border:1px solid #315174;border-radius:12px;padding:14px;min-height:90px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
-.result-actions{display:flex;gap:9px;margin-top:12px;flex-wrap:wrap}
-.result-actions button{flex:1;background:#173b60;border:1px solid #315174;font-size:13px}
-.notice{font-size:12px;color:#8fa7c2;line-height:1.5}
 footer{text-align:center;padding:13px;color:#647c99;font-size:11px}
-@media(max-width:500px){main{padding:14px}.welcome{margin-top:25px}.language-row{gap:6px}.language-row select{font-size:12px;padding:10px 5px}.result-actions button{padding:11px 8px}}
+@media(max-width:500px){main{padding:14px}.welcome{margin-top:25px}}
 </style>
 </head>
-
 <body>
+
 <section id="intro" aria-label="Bienvenido a IAGAM">
  <div class="intro-grid"></div>
  <div class="intro-content">
@@ -125,12 +113,11 @@ footer{text-align:center;padding:13px;color:#647c99;font-size:11px}
 <main>
 <section class="welcome" id="welcome">
  <h1>¿Qué quieres descubrir?</h1>
- <p>Busca información, aprende, resume textos o traduce entre español e inglés.</p>
+ <p>Busca información, aprende y prepara resúmenes de diferentes temas.</p>
 </section>
 
 <div class="menu-buttons">
  <button type="button" id="searchTab" class="active">🔎 Buscar información</button>
- <button type="button" id="translatorTab">🌎 Traductor</button>
 </div>
 
 <section id="searchView" class="view active">
@@ -149,35 +136,6 @@ footer{text-align:center;padding:13px;color:#647c99;font-size:11px}
   <textarea id="question" placeholder="Escribe tu pregunta..." rows="2" required></textarea>
   <button id="send" type="submit">Enviar</button>
  </form>
-</section>
-
-<section id="translatorView" class="view">
- <div class="translator-card">
-  <h2>🌎 Traductor IAGAM</h2>
-  <p class="notice">Traduce palabras, frases y textos entre español e inglés.</p>
-  <div class="language-row">
-   <select id="sourceLanguage" aria-label="Idioma original">
-    <option value="es">Español 🇲🇽</option>
-    <option value="en">Inglés 🇺🇸</option>
-   </select>
-   <button type="button" class="swap-button" id="swapLanguages" title="Intercambiar idiomas">⇄</button>
-   <select id="targetLanguage" aria-label="Idioma de destino">
-    <option value="en">Inglés 🇺🇸</option>
-    <option value="es">Español 🇲🇽</option>
-   </select>
-  </div>
-  <label for="translationInput">Texto que quieres traducir</label>
-  <textarea id="translationInput" placeholder="Escribe aquí una palabra, frase o texto..."></textarea>
-  <button type="button" class="translate-button" id="translateButton">Traducir</button>
-  <div id="translateStatus" role="status"></div>
-  <div class="result-label">Traducción</div>
-  <div class="result-box" id="translationResult" aria-live="polite">Aquí aparecerá tu traducción.</div>
-  <div class="result-actions">
-   <button type="button" id="copyTranslation">📋 Copiar</button>
-   <button type="button" id="speakTranslation">🔊 Escuchar</button>
-  </div>
- </div>
- <p class="notice">El traductor necesita conexión a internet. El servicio gratuito puede tener límites de uso. El texto se envía a MyMemory para realizar la traducción.</p>
 </section>
 </main>
 <footer>IAGAM · Inteligencia que busca contigo</footer>
@@ -230,137 +188,9 @@ setTimeout(()=>introStatus.textContent="ACTIVANDO NÚCLEO DE ENERGÍA...",2300);
 setTimeout(()=>introStatus.textContent="IAGAM ESTÁ LISTO",3200);
 startSound();setTimeout(finishIntro,4200);
 
-/* CAMBIO DE SECCIONES */
+/* NAVEGACIÓN */
 const searchTab=document.getElementById("searchTab");
-const translatorTab=document.getElementById("translatorTab");
-const searchView=document.getElementById("searchView");
-const translatorView=document.getElementById("translatorView");
-
-function showView(view){
- const isSearch=view==="search";
- searchView.classList.toggle("active",isSearch);
- translatorView.classList.toggle("active",!isSearch);
- searchTab.classList.toggle("active",isSearch);
- translatorTab.classList.toggle("active",!isSearch);
- document.getElementById("welcome").querySelector("h1").textContent=isSearch?"¿Qué quieres descubrir?":"Traduce con IAGAM";
- document.getElementById("welcome").querySelector("p").textContent=isSearch?"Busca información, aprende, resume textos o traduce entre español e inglés.":"Traduce palabras y textos entre español e inglés.";
-}
-searchTab.addEventListener("click",()=>showView("search"));
-translatorTab.addEventListener("click",()=>showView("translator"));
-
-/* TRADUCTOR CORREGIDO */
-const sourceLanguage=document.getElementById("sourceLanguage");
-const targetLanguage=document.getElementById("targetLanguage");
-const translationInput=document.getElementById("translationInput");
-const translationResult=document.getElementById("translationResult");
-const translateStatus=document.getElementById("translateStatus");
-const translateButton=document.getElementById("translateButton");
-const placeholderTranslation="Aquí aparecerá tu traducción.";
-const failedTranslation="No se pudo obtener la traducción.";
-
-document.getElementById("swapLanguages").addEventListener("click",()=>{
- const oldSource=sourceLanguage.value;
- sourceLanguage.value=targetLanguage.value;
- targetLanguage.value=oldSource;
- const currentResult=translationResult.textContent;
- if(currentResult!==placeholderTranslation&&currentResult!==failedTranslation){
-  translationInput.value=currentResult;
- }
- translationResult.textContent=placeholderTranslation;
- translateStatus.textContent="";
-});
-
-async function translateText(){
- const originalText=translationInput.value.trim();
-
- if(!originalText){
-  translateStatus.textContent="Escribe primero el texto que quieres traducir.";
-  return;
- }
- if(originalText.length>450){
-  translateStatus.textContent="El texto es demasiado largo. Prueba con menos de 450 caracteres.";
-  return;
- }
-
- const from=sourceLanguage.value;
- const to=targetLanguage.value;
- if(from===to){
-  translateStatus.textContent="Selecciona dos idiomas diferentes.";
-  return;
- }
-
- translateButton.disabled=true;
- translateStatus.textContent="Traduciendo...";
- translationResult.textContent="";
-
- try{
-  const params=new URLSearchParams({
-   q:originalText,
-   langpair:from+"|"+to,
-   mt:"1"
-  });
-
-  const response=await fetch("https://api.mymemory.translated.net/get?"+params.toString());
-  if(!response.ok)throw new Error("El servicio no está disponible.");
-
-  const data=await response.json();
-  const status=Number(data.responseStatus);
-
-  if(status!==200||!data.responseData||!data.responseData.translatedText){
-   throw new Error(data.responseDetails||"El servicio no pudo traducir el texto.");
-  }
-
-  const translated=String(data.responseData.translatedText).trim();
-  if(!translated)throw new Error("La traducción llegó vacía.");
-
-  const cleanOriginal=originalText.toLocaleLowerCase().trim();
-  const cleanTranslated=translated.toLocaleLowerCase().trim();
-
-  if(cleanOriginal===cleanTranslated){
-   throw new Error("El servicio devolvió el mismo texto.");
-  }
-
-  translationResult.textContent=translated;
-  translateStatus.textContent="Traducción completada.";
-
- }catch(error){
-  translationResult.textContent=failedTranslation;
-  translateStatus.textContent=
-   error.message==="El servicio devolvió el mismo texto."
-   ?"MyMemory devolvió el texto sin traducir. Inténtalo de nuevo más tarde o prueba con una frase completa."
-   :"No se pudo traducir. Comprueba tu conexión o inténtalo más tarde. El servicio gratuito puede tener límites.";
- }finally{
-  translateButton.disabled=false;
- }
-}
-translateButton.addEventListener("click",translateText);
-
-document.getElementById("copyTranslation").addEventListener("click",async()=>{
- const text=translationResult.textContent;
- if(!text||text===placeholderTranslation||text===failedTranslation){
-  translateStatus.textContent="Primero realiza una traducción.";return;
- }
- try{
-  await navigator.clipboard.writeText(text);
-  translateStatus.textContent="Traducción copiada.";
- }catch(error){
-  translateStatus.textContent="No se pudo copiar. Mantén presionado el texto para copiarlo.";
- }
-});
-
-document.getElementById("speakTranslation").addEventListener("click",()=>{
- const text=translationResult.textContent;
- if(!text||text===placeholderTranslation||text===failedTranslation){
-  translateStatus.textContent="Primero realiza una traducción.";return;
- }
- if(!("speechSynthesis" in window)){
-  translateStatus.textContent="La lectura en voz alta no está disponible en este navegador.";return;
- }
- window.speechSynthesis.cancel();
- const utterance=new SpeechSynthesisUtterance(text);
- utterance.lang=targetLanguage.value==="es"?"es-MX":"en-US";
- window.speechSynthesis.speak(utterance);
-});
+searchTab.addEventListener("click",()=>searchTab.classList.add("active"));
 
 /* BÚSQUEDA Y RESÚMENES */
 const chat=document.getElementById("chat");
@@ -499,7 +329,6 @@ form.addEventListener("submit",event=>{
 input.addEventListener("keydown",event=>{
  if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();form.requestSubmit()}
 });
-
 if("serviceWorker" in navigator){
  window.addEventListener("load",()=>{
   navigator.serviceWorker.register("./service-worker.js").catch(error=>console.log("Service Worker:",error));
