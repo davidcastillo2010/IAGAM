@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -12,171 +13,73 @@
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;
- font-family:Arial,sans-serif;
- background:#080D1B;
- color:#edf5ff;
- min-height:100vh;
- display:flex;
- flex-direction:column
+ margin:0;font-family:Arial,sans-serif;background:#080D1B;
+ color:#edf5ff;min-height:100vh;display:flex;flex-direction:column
 }
 header{
- padding:19px;
- text-align:center;
- border-bottom:1px solid #23344f;
+ padding:19px;text-align:center;border-bottom:1px solid #23344f;
  background:#0d1629
 }
-.logo{
- font-size:29px;
- font-weight:bold;
- color:#42d9ff;
- letter-spacing:3px
-}
-header p{
- color:#9aacc5;
- font-size:13px;
- margin:7px 0 0
-}
+.logo{font-size:29px;font-weight:bold;color:#42d9ff;letter-spacing:3px}
+header p{color:#9aacc5;font-size:13px;margin:7px 0 0}
 main{
- width:100%;
- max-width:850px;
- margin:auto;
- padding:20px;
- flex:1;
- display:flex;
- flex-direction:column
+ width:100%;max-width:850px;margin:auto;padding:20px;flex:1;
+ display:flex;flex-direction:column
 }
-.welcome{
- text-align:center;
- margin:35px 0 22px
-}
+.welcome{text-align:center;margin:35px 0 22px}
 .welcome h1{font-size:25px;color:#fff}
 .welcome p{color:#9aacc5;line-height:1.6}
-#chat{
- display:flex;
- flex-direction:column;
- gap:16px;
- padding-bottom:20px
-}
+#chat{display:flex;flex-direction:column;gap:16px;padding-bottom:20px}
 .message{
- padding:15px;
- border-radius:15px;
- line-height:1.65;
- white-space:pre-wrap;
- overflow-wrap:anywhere
+ padding:15px;border-radius:15px;line-height:1.65;
+ white-space:pre-wrap;overflow-wrap:anywhere
 }
 .user{
- background:#173b60;
- align-self:flex-end;
- max-width:90%;
+ background:#173b60;align-self:flex-end;max-width:90%;
  border:1px solid #2674a9
 }
-.bot{
- background:#111e33;
- border:1px solid #263c5b;
- align-self:stretch
-}
-.sources{
- margin-top:14px;
- border-top:1px solid #30415a;
- padding-top:12px
-}
+.bot{background:#111e33;border:1px solid #263c5b;align-self:stretch}
+.sources{margin-top:14px;border-top:1px solid #30415a;padding-top:12px}
 .sources strong{color:#43d8ff}
 .sources a{
- color:#55d9ff;
- display:block;
- margin:9px 0;
- overflow-wrap:anywhere
+ color:#55d9ff;display:block;margin:9px 0;overflow-wrap:anywhere
 }
-#status{
- color:#9aacc5;
- font-size:13px;
- padding:8px;
- min-height:28px
-}
+#status{color:#9aacc5;font-size:13px;padding:8px;min-height:28px}
 .controls{
- display:flex;
- align-items:center;
- gap:9px;
- margin:8px 0 12px;
- flex-wrap:wrap;
- color:#9aacc5;
- font-size:13px
+ display:flex;align-items:center;gap:9px;margin:8px 0 12px;
+ flex-wrap:wrap;color:#9aacc5;font-size:13px
 }
 select{
- background:#111e33;
- color:#edf5ff;
- border:1px solid #315174;
- border-radius:10px;
- padding:9px;
- font-size:14px
+ background:#111e33;color:#edf5ff;border:1px solid #315174;
+ border-radius:10px;padding:9px;font-size:14px
 }
 form{
- position:sticky;
- bottom:0;
- background:#080D1B;
- padding:12px 0 18px;
- display:flex;
- gap:9px
+ position:sticky;bottom:0;background:#080D1B;padding:12px 0 18px;
+ display:flex;gap:9px
 }
 textarea{
- flex:1;
- min-width:0;
- min-height:54px;
- max-height:140px;
- resize:vertical;
- padding:16px;
- border-radius:14px;
- border:1px solid #315174;
- background:#111e33;
- color:white;
- font-size:16px;
- outline:none
+ flex:1;min-width:0;min-height:54px;max-height:140px;resize:vertical;
+ padding:16px;border-radius:14px;border:1px solid #315174;
+ background:#111e33;color:white;font-size:16px;outline:none
 }
 textarea:focus{border-color:#42d9ff}
 button{
- border:0;
- border-radius:13px;
- padding:0 19px;
- background:#12a9d5;
- color:white;
- font-size:15px;
- font-weight:bold;
- cursor:pointer
+ border:0;border-radius:13px;padding:0 19px;background:#12a9d5;
+ color:white;font-size:15px;font-weight:bold;cursor:pointer
 }
 button:disabled{opacity:.5}
 .examples{
- display:flex;
- flex-wrap:wrap;
- gap:8px;
- justify-content:center;
+ display:flex;flex-wrap:wrap;gap:8px;justify-content:center;
  margin-bottom:20px
 }
 .examples button{
- background:#142640;
- border:1px solid #294765;
- padding:10px;
- font-size:12px
+ background:#142640;border:1px solid #294765;padding:10px;font-size:12px
 }
 .new-search{
- display:block;
- margin:0 auto 15px;
- padding:11px 16px;
- background:#142640;
- border:1px solid #294765
+ display:block;margin:0 auto 15px;padding:11px 16px;
+ background:#142640;border:1px solid #294765
 }
-.note{
- color:#8fa5c2;
- font-size:12px;
- line-height:1.5;
- margin-top:10px
-}
-footer{
- text-align:center;
- padding:13px;
- color:#647c99;
- font-size:11px
-}
+footer{text-align:center;padding:13px;color:#647c99;font-size:11px}
 @media(max-width:500px){
  main{padding:14px}
  .welcome{margin-top:25px}
@@ -187,14 +90,12 @@ footer{
 </head>
 
 <body>
-
 <header>
  <div class="logo">IAGAM</div>
  <p>Inteligencia que busca contigo</p>
 </header>
 
 <main>
-
 <section class="welcome" id="welcome">
  <h1>¿Qué quieres descubrir?</h1>
  <p>
@@ -236,12 +137,9 @@ footer{
  <textarea id="question" placeholder="Escribe tu pregunta..." rows="1" required></textarea>
  <button id="send" type="submit">Enviar</button>
 </form>
-
 </main>
 
-<footer>
- IAGAM · Información consultada en fuentes abiertas
-</footer>
+<footer>IAGAM · Información consultada en fuentes abiertas</footer>
 
 <script>
 const chat=document.getElementById("chat");
@@ -274,14 +172,12 @@ function normalize(text){
 }
 
 function getWords(text){
- return normalize(text)
-  .split(" ")
+ return normalize(text).split(" ")
   .filter(word=>word.length>2&&!stopWords.has(word));
 }
 
 function cleanQuery(text){
  let query=text.trim();
-
  query=query.replace(/[¿?¡!«»“”"]/g," ");
 
  query=query.replace(
@@ -370,40 +266,20 @@ function addMessage(text,type,sources=[]){
  box.scrollIntoView({behavior:"smooth",block:"end"});
 }
 
-function relevanceScore(queryWords,title,snippet=""){
- const titleWords=new Set(getWords(title));
- const snippetWords=new Set(getWords(snippet));
-
- let score=0;
+function titleScore(queryWords,title){
+ const titleWords=getWords(title);
  let matched=0;
 
  queryWords.forEach(word=>{
-  let found=false;
-
-  if(titleWords.has(word)){
-   score+=6;
-   found=true;
-  }else if(
-   [...titleWords].some(w=>
-    w.startsWith(word)||word.startsWith(w)
-   )
-  ){
-   score+=3;
-   found=true;
+  if(titleWords.some(t=>t===word||t.startsWith(word)||word.startsWith(t))){
+   matched++;
   }
-
-  if(!found&&snippetWords.has(word)){
-   score+=1;
-   found=true;
-  }
-
-  if(found)matched++;
  });
 
  return {
-  score,
   matched,
-  ratio:queryWords.length?matched/queryWords.length:0
+  ratio:queryWords.length?matched/queryWords.length:0,
+  exact:normalize(title).includes(normalize(queryWords.join(" ")))
  };
 }
 
@@ -434,6 +310,7 @@ async function getArticle(pageid){
   pageids:String(pageid),
   prop:"extracts",
   explaintext:"1",
+  exintro:"1",
   exchars:"9000",
   format:"json",
   origin:"*"
@@ -457,76 +334,21 @@ async function getArticle(pageid){
  };
 }
 
-function articleMatches(queryWords,article){
- const result=relevanceScore(
-  queryWords,
-  article.title,
-  article.extract.slice(0,3000)
- );
-
- if(queryWords.length===1)return result.matched>=1;
-
- return result.ratio>=0.35;
-}
-
-function splitSentences(text){
- return text
-  .replace(/\[[0-9]+\]/g,"")
-  .replace(/\s+/g," ")
-  .split(/(?<=[.!?])\s+/)
-  .map(sentence=>sentence.trim())
-  .filter(sentence=>
-   sentence.length>45&&
-   sentence.length<600&&
-   !/^(referencias|bibliografía|bibliografia|enlaces externos|véase también|vease tambien)/i.test(sentence)
-  );
-}
-
-function scoreSentence(sentence,index,queryWords){
- const words=new Set(getWords(sentence));
- let score=0;
-
- queryWords.forEach(word=>{
-  if(words.has(word))score+=3;
-  else if([...words].some(w=>w.startsWith(word)||word.startsWith(w))){
-   score+=1;
-  }
- });
-
- score+=Math.max(0,1.5-index*0.035);
-
- if(sentence.length<220)score+=0.5;
-
- if(/es un|es una|se define|está formado|esta formado|consiste en/i.test(sentence)){
-  score+=1.5;
- }
-
- if(/por ejemplo|sin embargo|además|ademas|también|tambien/i.test(sentence)){
-  score+=0.3;
- }
-
- return {sentence,index,score,words};
-}
-
-function selectSentences(sentences,queryWords,limit,used=[]){
- const ranked=sentences.map((sentence,index)=>
-  scoreSentence(sentence,index,queryWords)
- ).sort((a,b)=>b.score-a.score);
-
- const selected=[];
-
- for(const item of ranked){
-  const duplicate=[...used,...selected].some(old=>{
-   const common=[...item.words].filter(w=>old.words.has(w)).length;
-   const smaller=Math.min(item.words.size,old.words.size)||1;
-   return common/smaller>0.68;
-  });
-
-  if(!duplicate)selected.push(item);
-  if(selected.length>=limit)break;
- }
-
- return selected;
+function splitIntro(extract){
+ return extract
+  .split(/\n+/)
+  .map(paragraph=>paragraph.trim())
+  .filter(paragraph=>paragraph.length>45)
+  .map(paragraph=>{
+   return paragraph
+    .replace(/\[[0-9]+\]/g,"")
+    .split(/(?<=[.!?])\s+/)
+    .map(sentence=>sentence.trim())
+    .filter(sentence=>
+     sentence.length>35&&sentence.length<650
+    );
+  })
+  .filter(group=>group.length);
 }
 
 function simplifySentence(sentence){
@@ -538,60 +360,47 @@ function simplifySentence(sentence){
 }
 
 function makeAnswer(original,article){
- const simple=wantsSimple(original);
- const queryWords=getWords(cleanQuery(original));
- const sentences=splitSentences(article.extract);
+ const paragraphs=splitIntro(article.extract);
 
- if(!sentences.length){
-  return "Encontré el artículo, pero no pude organizar sus ideas. Consulta la fuente completa.";
+ if(!paragraphs.length){
+  return "Encontré el artículo, pero no pude obtener una introducción suficiente para preparar un resumen fiable. Consulta la fuente original.";
  }
 
+ const simple=wantsSimple(original);
  const length=summaryLength.value;
 
+ let definitionCount=1;
  let featureCount=2;
- let importantCount=1;
+ let dataCount=1;
 
  if(length==="short"){
+  definitionCount=1;
   featureCount=1;
-  importantCount=0;
+  dataCount=0;
  }else if(length==="long"){
+  definitionCount=2;
   featureCount=5;
-  importantCount=3;
+  dataCount=3;
  }
 
- const introCandidates=sentences.slice(0,6);
+ // La definición sale del comienzo de la introducción.
+ const firstParagraph=paragraphs[0];
+ const definition=firstParagraph.slice(0,definitionCount);
 
- let intro=introCandidates.find(sentence=>
-  /es un|es una|se define|está formado|esta formado|consiste en/i.test(sentence)
- );
+ // Las características se toman después de la definición,
+ // conservando el orden del artículo.
+ let remaining=firstParagraph.slice(definition.length);
 
- if(!intro)intro=introCandidates[0];
+ // Si hacen falta más ideas, se usan los párrafos siguientes
+ // de la introducción, sin escoger frases al azar.
+ for(let i=1;i<paragraphs.length;i++){
+  remaining=remaining.concat(paragraphs[i]);
+ }
 
- const introItem=scoreSentence(
-  intro,
-  sentences.indexOf(intro),
-  queryWords
- );
+ const features=remaining.slice(0,featureCount);
+ const data=remaining.slice(featureCount,featureCount+dataCount);
 
- const remaining=sentences.filter(s=>s!==intro);
-
- const features=selectSentences(
-  remaining,
-  queryWords,
-  featureCount,
-  [introItem]
- );
-
- const used=[introItem,...features];
-
- const important=selectSentences(
-  remaining,
-  queryWords,
-  importantCount,
-  used
- );
-
- const formatSentence=sentence=>
+ const format=sentence=>
   simple?simplifySentence(sentence):sentence;
 
  let answer=wantsSummary(original)
@@ -599,28 +408,26 @@ function makeAnswer(original,article){
   :"INFORMACIÓN: "+article.title+"\n\n";
 
  answer+="¿QUÉ ES?\n";
- answer+=formatSentence(intro)+"\n\n";
+ answer+=definition.map(format).join(" ")+"\n\n";
 
  if(features.length){
   answer+="CARACTERÍSTICAS PRINCIPALES\n";
-
-  features.forEach(item=>{
-   answer+="• "+formatSentence(item.sentence)+"\n\n";
+  features.forEach(sentence=>{
+   answer+="• "+format(sentence)+"\n\n";
   });
  }
 
- if(important.length){
-  answer+="DATOS IMPORTANTES\n";
-
-  important.forEach(item=>{
-   answer+="• "+formatSentence(item.sentence)+"\n\n";
+ if(data.length){
+  answer+="OTROS DATOS IMPORTANTES\n";
+  data.forEach(sentence=>{
+   answer+="• "+format(sentence)+"\n\n";
   });
  }
 
  answer+="CONCLUSIÓN\n";
- answer+="La información consultada reúne algunos de los puntos principales sobre "+article.title+". Puedes abrir las fuentes para profundizar y comprobar los detalles.";
+ answer+="Según la introducción consultada, estos son los conceptos principales de "+article.title+". Puedes abrir la fuente para leer el contenido completo y comprobar los detalles.";
 
- answer+="\n\nNota: IAGAM organiza información de fuentes públicas. Sus respuestas se basan en los artículos consultados y no son una opinión ni una verificación independiente.";
+ answer+="\n\nNota: IAGAM organiza información de fuentes públicas. El resumen se basa en el texto consultado y puede necesitar verificación adicional.";
 
  return answer.trim();
 }
@@ -653,64 +460,64 @@ async function ask(question){
 
   if(!results.length){
    addMessage(
-    "No encontré resultados para ese tema. Intenta con otras palabras o escribe el nombre del tema de forma más específica.",
+    "No encontré resultados para ese tema. Intenta con otras palabras.",
     "bot"
    );
    return;
   }
 
   const candidates=results.map(item=>{
-   const relevance=relevanceScore(
-    queryWords,
-    item.title,
-    item.snippet||""
-   );
-
+   const relevance=titleScore(queryWords,item.title);
    return {...item,relevance};
   })
-  .filter(item=>{
-   if(queryWords.length===1)return item.relevance.matched>=1;
-   return item.relevance.ratio>=0.35;
-  })
-  .sort((a,b)=>b.relevance.score-a.relevance.score);
+  .filter(item=>item.relevance.matched>0)
+  .sort((a,b)=>{
+   if(a.relevance.ratio!==b.relevance.ratio){
+    return b.relevance.ratio-a.relevance.ratio;
+   }
+   return b.relevance.matched-a.relevance.matched;
+  });
 
   if(!candidates.length){
    addMessage(
-    "Encontré resultados, pero no pude confirmar que correspondan a tu pregunta. Intenta expresarla de otra manera.",
+    "Encontré resultados, pero sus títulos no coinciden suficientemente con el tema. Intenta escribirlo de otra manera.",
     "bot"
    );
    return;
   }
 
-  statusBox.textContent="Leyendo y comparando los artículos...";
+  statusBox.textContent="Revisando la introducción del artículo...";
 
   const articles=await Promise.all(
-   candidates.slice(0,6).map(item=>
+   candidates.slice(0,5).map(item=>
     getArticle(item.pageid).catch(()=>null)
    )
   );
 
-  const relevant=articles.filter(article=>
-   article&&articleMatches(queryWords,article)
+  const valid=articles.filter(article=>
+   article&&article.extract&&article.extract.length>80
   );
 
-  if(!relevant.length){
+  if(!valid.length){
    addMessage(
-    "No encontré un artículo suficientemente relacionado con tu pregunta. No quiero darte información equivocada.",
+    "No pude obtener una introducción suficiente de las fuentes encontradas. Intenta de nuevo más tarde.",
     "bot"
    );
    return;
   }
 
-  const best=relevant[0];
+  // Se prioriza el artículo cuyo título coincide mejor con la búsqueda.
+  const best=valid[0];
+
+  const sourceList=valid.slice(0,3).map(article=>({
+   title:article.title,
+   url:article.url
+  }));
 
   addMessage(
    makeAnswer(question,best),
    "bot",
-   relevant.slice(0,3).map(article=>({
-    title:article.title,
-    url:article.url
-   }))
+   sourceList
   );
 
  }catch(error){
@@ -749,6 +556,5 @@ if("serviceWorker" in navigator){
  });
 }
 </script>
-
 </body>
 </html>
