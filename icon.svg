@@ -1,11 +1,75 @@
-
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="110" fill="#080D1B"/>
-  <circle cx="256" cy="256" r="178" fill="none" stroke="#16BFEF" stroke-width="22"/>
-  <path d="M78 256h356M256 78v356M130 130l252 252M382 130 130 382" fill="none" stroke="#7655F5" stroke-width="15" stroke-linecap="round"/>
-  <rect x="177" y="185" width="158" height="125" rx="32" fill="#151F36" stroke="#51DFFF" stroke-width="12"/>
-  <circle cx="224" cy="242" r="17" fill="#51DFFF"/>
-  <circle cx="288" cy="242" r="17" fill="#51DFFF"/>
-  <path d="M224 278h64" stroke="#51DFFF" stroke-width="12" stroke-linecap="round"/>
-  <path d="M256 185v-35m-12 0h24" stroke="#51DFFF" stroke-width="12" stroke-linecap="round"/>
+  <defs>
+    <radialGradient id="bg">
+      <stop offset="0%" stop-color="#12385a"/>
+      <stop offset="100%" stop-color="#080D1B"/>
+    </radialGradient>
+    <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#d8f7ff"/>
+      <stop offset="55%" stop-color="#4a9dc5"/>
+      <stop offset="100%" stop-color="#17618e"/>
+    </linearGradient>
+    <linearGradient id="body" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#8ceaff"/>
+      <stop offset="100%" stop-color="#17618e"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="9" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="512" height="512" rx="110" fill="url(#bg)"/>
+
+  <circle cx="256" cy="256" r="205"
+          fill="none" stroke="#16BFEF" stroke-width="5" opacity=".3"/>
+  <circle cx="256" cy="256" r="175"
+          fill="none" stroke="#42d9ff" stroke-width="3" opacity=".2"/>
+
+  <!-- Antena -->
+  <path d="M256 88V55" stroke="#42d9ff" stroke-width="13" stroke-linecap="round"/>
+  <circle cx="256" cy="43" r="15" fill="#9af5ff" filter="url(#glow)"/>
+
+  <!-- Orejas -->
+  <rect x="115" y="205" width="34" height="82" rx="13"
+        fill="#2494c0" stroke="#6eeaff" stroke-width="7"/>
+  <rect x="363" y="205" width="34" height="82" rx="13"
+        fill="#2494c0" stroke="#6eeaff" stroke-width="7"/>
+
+  <!-- Cabeza -->
+  <rect x="137" y="112" width="238" height="184" rx="54"
+        fill="url(#metal)" stroke="#74eaff" stroke-width="10"
+        filter="url(#glow)"/>
+
+  <!-- Ojos -->
+  <circle cx="207" cy="198" r="20" fill="#54f5ff" filter="url(#glow)"/>
+  <circle cx="305" cy="198" r="20" fill="#54f5ff" filter="url(#glow)"/>
+
+  <!-- Boca -->
+  <rect x="219" y="244" width="74" height="12" rx="6" fill="#17618e"/>
+
+  <!-- Cuerpo -->
+  <rect x="163" y="315" width="186" height="145" rx="38"
+        fill="url(#body)" stroke="#53dcff" stroke-width="9"/>
+
+  <!-- Núcleo -->
+  <circle cx="256" cy="386" r="43" fill="#50f5ff"
+          stroke="#d9ffff" stroke-width="10" filter="url(#glow)"/>
+  <circle cx="256" cy="386" r="17" fill="#ffffff" opacity=".8"/>
+
+  <!-- Brazos -->
+  <path d="M145 335L112 405" stroke="#2c8db8"
+        stroke-width="27" stroke-linecap="round"/>
+  <path d="M367 335L400 405" stroke="#2c8db8"
+        stroke-width="27" stroke-linecap="round"/>
+  <path d="M145 335L112 405M367 335L400 405"
+        stroke="#65e5ff" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Brillos -->
+  <circle cx="83" cy="145" r="7" fill="#7cf7ff" filter="url(#glow)"/>
+  <circle cx="425" cy="155" r="8" fill="#7cf7ff" filter="url(#glow)"/>
+  <circle cx="420" cy="330" r="6" fill="#7cf7ff" filter="url(#glow)"/>
 </svg>
