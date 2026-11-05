@@ -1,4 +1,4 @@
-const CACHE_NAME = "iagam-v2";
+const CACHE_NAME = "iagam-v3";
 
 self.addEventListener("install", event => {
  event.waitUntil(
