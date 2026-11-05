@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080D1B">
-<meta name="description" content="IAGAM busca información, organiza explicaciones y resuelve operaciones matemáticas.">
+<meta name="description" content="IAGAM busca información y resuelve operaciones matemáticas.">
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
 <title>IAGAM - Inteligencia que busca contigo</title>
@@ -77,8 +78,6 @@ main{width:100%;max-width:850px;margin:auto;padding:20px;flex:1;display:flex;fle
 .math-card p{color:#9aacc5;line-height:1.5}
 .math-card textarea{min-height:90px}
 .math-result{background:#080d1b;border:1px solid #315174;border-radius:12px;padding:15px;margin-top:12px;min-height:65px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6}
-.math-examples{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
-.math-examples button{background:#173b60;border:1px solid #315174;font-size:13px;padding:9px 12px}
 .math-action{width:100%;margin-top:10px}
 .math-help{font-size:12px;color:#8fa7c2!important}
 .controls{display:flex;align-items:center;gap:9px;margin:8px 0 12px;flex-wrap:wrap;color:#9aacc5;font-size:13px}
@@ -153,16 +152,7 @@ footer{text-align:center;padding:13px;color:#647c99;font-size:11px}
   <h2>🧮 Matemáticas IAGAM</h2>
   <p>Escribe una operación y obtén el resultado con sus pasos reales.</p>
   <label for="mathInput">Tu operación matemática</label>
-  <textarea id="mathInput" placeholder="Ejemplo: (25 + 15) × 3 - 8" rows="2"></textarea>
-  <div class="math-examples">
-   <button type="button" data-math="125 + 378">Suma</button>
-   <button type="button" data-math="900 - 245">Resta</button>
-   <button type="button" data-math="24 × 8">Multiplicación</button>
-   <button type="button" data-math="144 ÷ 12">División</button>
-   <button type="button" data-math="15% de 240">Porcentaje</button>
-   <button type="button" data-math="√(225)">Raíz cuadrada</button>
-   <button type="button" data-math="2^5">Potencia</button>
-  </div>
+  <textarea id="mathInput" placeholder="" rows="2"></textarea>
   <button type="button" class="math-action" id="calculateButton">Calcular</button>
   <div id="mathStatus" role="status"></div>
   <div class="math-result" id="mathResult" aria-live="polite">Aquí aparecerá el resultado y su procedimiento.</div>
@@ -240,7 +230,7 @@ function showView(name){
 searchTab.addEventListener("click",()=>showView("search"));
 mathTab.addEventListener("click",()=>showView("math"));
 
-/* CALCULADORA MATEMÁTICA CON PROCEDIMIENTO */
+/* CALCULADORA MATEMÁTICA */
 const mathInput=document.getElementById("mathInput");
 const mathResult=document.getElementById("mathResult");
 const mathStatus=document.getElementById("mathStatus");
@@ -374,12 +364,6 @@ function runCalculation(){
 }
 
 document.getElementById("calculateButton").addEventListener("click",runCalculation);
-document.querySelectorAll("[data-math]").forEach(button=>{
- button.addEventListener("click",()=>{
-  mathInput.value=button.dataset.math;
-  runCalculation();
- });
-});
 mathInput.addEventListener("keydown",event=>{
  if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();runCalculation()}
 });
