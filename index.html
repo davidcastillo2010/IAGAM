@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080D1B">
-<meta name="description" content="IAGAM busca información y organiza explicaciones.">
+<meta name="description" content="IAGAM busca información, organiza explicaciones y resuelve operaciones matemáticas.">
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
 <title>IAGAM - Inteligencia que busca contigo</title>
@@ -67,11 +67,20 @@ main{width:100%;max-width:850px;margin:auto;padding:20px;flex:1;display:flex;fle
 #chat{display:flex;flex-direction:column;gap:16px;padding-bottom:20px}
 .message{padding:15px;border-radius:15px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere}
 .user{background:#173b60;align-self:flex-end;max-width:90%;border:1px solid #2674a9}
-.bot{background:#111e33;border:1px solid #263c5b;align-self:stretch}
+.bot{background:#111e33;border:1px solid #263c5b}
 .sources{margin-top:14px;border-top:1px solid #30415a;padding-top:12px}
 .sources strong{color:#43d8ff}
 .sources a{color:#55d9ff;display:block;margin:9px 0;overflow-wrap:anywhere}
-#status{color:#9aacc5;font-size:13px;padding:8px;min-height:28px}
+#status,#mathStatus{color:#9aacc5;font-size:13px;padding:8px;min-height:28px}
+.math-card{background:#111e33;border:1px solid #294765;border-radius:16px;padding:16px}
+.math-card h2{margin-top:0;color:#42d9ff;font-size:21px}
+.math-card p{color:#9aacc5;line-height:1.5}
+.math-card textarea{min-height:90px}
+.math-result{background:#080d1b;border:1px solid #315174;border-radius:12px;padding:15px;margin-top:12px;min-height:65px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.6}
+.math-examples{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.math-examples button{background:#173b60;border:1px solid #315174;font-size:13px;padding:9px 12px}
+.math-action{width:100%;margin-top:10px}
+.math-help{font-size:12px;color:#8fa7c2!important}
 .controls{display:flex;align-items:center;gap:9px;margin:8px 0 12px;flex-wrap:wrap;color:#9aacc5;font-size:13px}
 select{background:#111e33;color:#edf5ff;border:1px solid #315174;border-radius:10px;padding:11px;font-size:14px;max-width:100%}
 form{display:flex;gap:9px}
@@ -118,6 +127,7 @@ footer{text-align:center;padding:13px;color:#647c99;font-size:11px}
 
 <div class="menu-buttons">
  <button type="button" id="searchTab" class="active">🔎 Buscar información</button>
+ <button type="button" id="mathTab">🧮 Matemáticas</button>
 </div>
 
 <section id="searchView" class="view active">
@@ -136,6 +146,28 @@ footer{text-align:center;padding:13px;color:#647c99;font-size:11px}
   <textarea id="question" placeholder="Escribe tu pregunta..." rows="2" required></textarea>
   <button id="send" type="submit">Enviar</button>
  </form>
+</section>
+
+<section id="mathView" class="view">
+ <div class="math-card">
+  <h2>🧮 Matemáticas IAGAM</h2>
+  <p>Escribe una operación y obtén el resultado con una explicación del orden de las operaciones.</p>
+  <label for="mathInput">Tu operación matemática</label>
+  <textarea id="mathInput" placeholder="Ejemplo: (25 + 15) × 3 - 8" rows="2"></textarea>
+  <div class="math-examples">
+   <button type="button" data-math="125 + 378">Suma</button>
+   <button type="button" data-math="900 - 245">Resta</button>
+   <button type="button" data-math="24 × 8">Multiplicación</button>
+   <button type="button" data-math="144 ÷ 12">División</button>
+   <button type="button" data-math="15% de 240">Porcentaje</button>
+   <button type="button" data-math="√(225)">Raíz cuadrada</button>
+   <button type="button" data-math="2^5">Potencia</button>
+  </div>
+  <button type="button" class="math-action" id="calculateButton">Calcular</button>
+  <div id="mathStatus" role="status"></div>
+  <div class="math-result" id="mathResult" aria-live="polite">Aquí aparecerá el resultado y su explicación.</div>
+  <p class="math-help">Admite +, −, ×, ÷, paréntesis, potencias (^), porcentajes (%) y raíces cuadradas (√ o raiz). Usa punto o coma para decimales. No escribas el signo =.</p>
+ </div>
 </section>
 </main>
 <footer>IAGAM · Inteligencia que busca contigo</footer>
@@ -190,7 +222,138 @@ startSound();setTimeout(finishIntro,4200);
 
 /* NAVEGACIÓN */
 const searchTab=document.getElementById("searchTab");
-searchTab.addEventListener("click",()=>searchTab.classList.add("active"));
+const mathTab=document.getElementById("mathTab");
+const searchView=document.getElementById("searchView");
+const mathView=document.getElementById("mathView");
+
+function showView(name){
+ const searching=name==="search";
+ searchView.classList.toggle("active",searching);
+ mathView.classList.toggle("active",!searching);
+ searchTab.classList.toggle("active",searching);
+ mathTab.classList.toggle("active",!searching);
+ document.getElementById("welcome").querySelector("h1").textContent=searching?"¿Qué quieres descubrir?":"Resuelve tus operaciones";
+ document.getElementById("welcome").querySelector("p").textContent=searching
+  ?"Busca información, aprende y prepara resúmenes de diferentes temas."
+  :"Calcula operaciones matemáticas y consulta una explicación sencilla.";
+}
+searchTab.addEventListener("click",()=>showView("search"));
+mathTab.addEventListener("click",()=>showView("math"));
+
+/* CALCULADORA MATEMÁTICA */
+const mathInput=document.getElementById("mathInput");
+const mathResult=document.getElementById("mathResult");
+const mathStatus=document.getElementById("mathStatus");
+
+function calculateExpression(raw){
+ let expr=raw.trim().toLowerCase()
+  .replace(/,/g,".")
+  .replace(/[×x]/g,"*")
+  .replace(/[÷:]/g,"/")
+  .replace(/[−–]/g,"-")
+  .replace(/√\s*\(/g,"sqrt(")
+  .replace(/raiz\s*\(/g,"sqrt(")
+  .replace(/\s+/g,"");
+
+ expr=expr.replace(/(\d+(?:\.\d+)?)%de(\d+(?:\.\d+)?)/g,"($1/100*$2)");
+ if(!expr)throw new Error("Escribe una operación.");
+ if(expr.length>100)throw new Error("La operación es demasiado larga.");
+
+ const tokens=expr.match(/sqrt|\d+(?:\.\d+)?|[()+\-*/^%]/g)||[];
+ if(tokens.join("")!==expr)throw new Error("Hay caracteres no permitidos. Revisa la operación.");
+ let pos=0;
+
+ function peek(){return tokens[pos]}
+ function take(){return tokens[pos++]}
+
+ function primary(){
+  const t=take();
+  if(t===undefined)throw new Error("La operación está incompleta.");
+  if(t==="+")return primary();
+  if(t==="-")return -primary();
+
+  if(t==="("){
+   const v=addSub();
+   if(take()!==")")throw new Error("Falta cerrar un paréntesis.");
+   return v;
+  }
+
+  if(t==="sqrt"){
+   if(take()!=="(")throw new Error("Escribe la raíz como √(número).");
+   const v=addSub();
+   if(take()!==")")throw new Error("Falta cerrar el paréntesis de la raíz.");
+   if(v<0)throw new Error("No se puede calcular la raíz cuadrada real de un número negativo.");
+   return Math.sqrt(v);
+  }
+
+  if(!/^\d+(?:\.\d+)?$/.test(t))throw new Error("Revisa los números de la operación.");
+  return Number(t);
+ }
+
+ function power(){
+  let v=primary();
+  if(peek()==="^"){take();v=Math.pow(v,power())}
+  return v;
+ }
+
+ function unary(){
+  let v=power();
+  while(peek()==="%"){take();v=v/100}
+  return v;
+ }
+
+ function mulDiv(){
+  let v=unary();
+  while(peek()==="*"||peek()==="/"){
+   const op=take(),right=unary();
+   if(op==="/"&&right===0)throw new Error("No se puede dividir entre cero.");
+   v=op==="*"?v*right:v/right;
+  }
+  return v;
+ }
+
+ function addSub(){
+  let v=mulDiv();
+  while(peek()==="+"||peek()==="-"){
+   const op=take(),right=mulDiv();
+   v=op==="+"?v+right:v-right;
+  }
+  return v;
+ }
+
+ const value=addSub();
+ if(pos!==tokens.length)throw new Error("No se pudo interpretar toda la operación.");
+ if(!Number.isFinite(value))throw new Error("El resultado es demasiado grande o no es válido.");
+ return value;
+}
+
+function explainMath(expression,result){
+ return "Operación: "+expression+"\n\nResultado: "+Number(result.toPrecision(12))+
+ "\n\n¿Cómo se resuelve?\n1. Primero se resuelven los paréntesis.\n2. Después las raíces y potencias.\n3. Luego multiplicaciones y divisiones, de izquierda a derecha.\n4. Por último sumas y restas, de izquierda a derecha.\n\nIAGAM aplicó ese orden para obtener el resultado.";
+}
+
+function runCalculation(){
+ const expression=mathInput.value.trim();
+ try{
+  const result=calculateExpression(expression);
+  mathResult.textContent=explainMath(expression,result);
+  mathStatus.textContent="Cálculo completado.";
+ }catch(error){
+  mathResult.textContent="No se pudo calcular esta operación.";
+  mathStatus.textContent=error.message||"Revisa la operación e inténtalo de nuevo.";
+ }
+}
+
+document.getElementById("calculateButton").addEventListener("click",runCalculation);
+document.querySelectorAll("[data-math]").forEach(button=>{
+ button.addEventListener("click",()=>{
+  mathInput.value=button.dataset.math;
+  runCalculation();
+ });
+});
+mathInput.addEventListener("keydown",event=>{
+ if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();runCalculation()}
+});
 
 /* BÚSQUEDA Y RESÚMENES */
 const chat=document.getElementById("chat");
