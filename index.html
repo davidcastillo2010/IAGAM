@@ -151,7 +151,7 @@ footer{text-align:center;padding:13px;color:#647c99;font-size:11px}
 <section id="mathView" class="view">
  <div class="math-card">
   <h2>🧮 Matemáticas IAGAM</h2>
-  <p>Escribe una operación y obtén el resultado con una explicación del orden de las operaciones.</p>
+  <p>Escribe una operación y obtén el resultado con sus pasos reales.</p>
   <label for="mathInput">Tu operación matemática</label>
   <textarea id="mathInput" placeholder="Ejemplo: (25 + 15) × 3 - 8" rows="2"></textarea>
   <div class="math-examples">
@@ -165,7 +165,7 @@ footer{text-align:center;padding:13px;color:#647c99;font-size:11px}
   </div>
   <button type="button" class="math-action" id="calculateButton">Calcular</button>
   <div id="mathStatus" role="status"></div>
-  <div class="math-result" id="mathResult" aria-live="polite">Aquí aparecerá el resultado y su explicación.</div>
+  <div class="math-result" id="mathResult" aria-live="polite">Aquí aparecerá el resultado y su procedimiento.</div>
   <p class="math-help">Admite +, −, ×, ÷, paréntesis, potencias (^), porcentajes (%) y raíces cuadradas (√ o raiz). Usa punto o coma para decimales. No escribas el signo =.</p>
  </div>
 </section>
@@ -235,12 +235,12 @@ function showView(name){
  document.getElementById("welcome").querySelector("h1").textContent=searching?"¿Qué quieres descubrir?":"Resuelve tus operaciones";
  document.getElementById("welcome").querySelector("p").textContent=searching
   ?"Busca información, aprende y prepara resúmenes de diferentes temas."
-  :"Calcula operaciones matemáticas y consulta una explicación sencilla.";
+  :"Calcula operaciones matemáticas y consulta el procedimiento paso a paso.";
 }
 searchTab.addEventListener("click",()=>showView("search"));
 mathTab.addEventListener("click",()=>showView("math"));
 
-/* CALCULADORA MATEMÁTICA */
+/* CALCULADORA MATEMÁTICA CON PROCEDIMIENTO */
 const mathInput=document.getElementById("mathInput");
 const mathResult=document.getElementById("mathResult");
 const mathStatus=document.getElementById("mathStatus");
@@ -261,7 +261,10 @@ function calculateExpression(raw){
 
  const tokens=expr.match(/sqrt|\d+(?:\.\d+)?|[()+\-*/^%]/g)||[];
  if(tokens.join("")!==expr)throw new Error("Hay caracteres no permitidos. Revisa la operación.");
+
  let pos=0;
+ const steps=[];
+ const fmt=n=>Number(n.toPrecision(12)).toString();
 
  function peek(){return tokens[pos]}
  function take(){return tokens[pos++]}
@@ -283,7 +286,9 @@ function calculateExpression(raw){
    const v=addSub();
    if(take()!==")")throw new Error("Falta cerrar el paréntesis de la raíz.");
    if(v<0)throw new Error("No se puede calcular la raíz cuadrada real de un número negativo.");
-   return Math.sqrt(v);
+   const result=Math.sqrt(v);
+   steps.push("√"+fmt(v)+" = "+fmt(result));
+   return result;
   }
 
   if(!/^\d+(?:\.\d+)?$/.test(t))throw new Error("Revisa los números de la operación.");
@@ -292,22 +297,34 @@ function calculateExpression(raw){
 
  function power(){
   let v=primary();
-  if(peek()==="^"){take();v=Math.pow(v,power())}
+  if(peek()==="^"){
+   take();
+   const right=power();
+   const left=v;
+   v=Math.pow(left,right);
+   steps.push(fmt(left)+" ^ "+fmt(right)+" = "+fmt(v));
+  }
   return v;
  }
 
  function unary(){
   let v=power();
-  while(peek()==="%"){take();v=v/100}
+  while(peek()==="%"){
+   take();
+   const before=v;
+   v=v/100;
+   steps.push(fmt(before)+"% = "+fmt(v));
+  }
   return v;
  }
 
  function mulDiv(){
   let v=unary();
   while(peek()==="*"||peek()==="/"){
-   const op=take(),right=unary();
+   const op=take(),right=unary(),left=v;
    if(op==="/"&&right===0)throw new Error("No se puede dividir entre cero.");
    v=op==="*"?v*right:v/right;
+   steps.push(fmt(left)+(op==="*"?" × ":" ÷ ")+fmt(right)+" = "+fmt(v));
   }
   return v;
  }
@@ -315,8 +332,9 @@ function calculateExpression(raw){
  function addSub(){
   let v=mulDiv();
   while(peek()==="+"||peek()==="-"){
-   const op=take(),right=mulDiv();
+   const op=take(),right=mulDiv(),left=v;
    v=op==="+"?v+right:v-right;
+   steps.push(fmt(left)+(op==="+"?" + ":" − ")+fmt(right)+" = "+fmt(v));
   }
   return v;
  }
@@ -324,19 +342,30 @@ function calculateExpression(raw){
  const value=addSub();
  if(pos!==tokens.length)throw new Error("No se pudo interpretar toda la operación.");
  if(!Number.isFinite(value))throw new Error("El resultado es demasiado grande o no es válido.");
- return value;
+ return {value,steps};
 }
 
-function explainMath(expression,result){
- return "Operación: "+expression+"\n\nResultado: "+Number(result.toPrecision(12))+
- "\n\n¿Cómo se resuelve?\n1. Primero se resuelven los paréntesis.\n2. Después las raíces y potencias.\n3. Luego multiplicaciones y divisiones, de izquierda a derecha.\n4. Por último sumas y restas, de izquierda a derecha.\n\nIAGAM aplicó ese orden para obtener el resultado.";
+function explainMath(expression,calculation){
+ let explanation="Operación: "+expression+"\n\n";
+ explanation+="Procedimiento paso a paso:\n";
+
+ if(calculation.steps.length){
+  calculation.steps.forEach((step,index)=>{
+   explanation+=(index+1)+". "+step+"\n";
+  });
+ }else{
+  explanation+="La expresión contiene un solo número, no requiere operaciones.\n";
+ }
+
+ explanation+="\nResultado final: "+Number(calculation.value.toPrecision(12));
+ return explanation;
 }
 
 function runCalculation(){
  const expression=mathInput.value.trim();
  try{
-  const result=calculateExpression(expression);
-  mathResult.textContent=explainMath(expression,result);
+  const calculation=calculateExpression(expression);
+  mathResult.textContent=explainMath(expression,calculation);
   mathStatus.textContent="Cálculo completado.";
  }catch(error){
   mathResult.textContent="No se pudo calcular esta operación.";
