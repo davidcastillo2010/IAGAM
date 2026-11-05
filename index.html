@@ -7,182 +7,72 @@
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
 <title>IAGAM - Inteligencia que busca contigo</title>
-
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;
- font-family:Arial,sans-serif;
- background:#080D1B;
- color:#edf5ff;
- min-height:100vh;
- display:flex;
- flex-direction:column
-}
-header{
- padding:19px;
- text-align:center;
- border-bottom:1px solid #23344f;
- background:#0d1629
-}
-.logo{
- font-size:29px;
- font-weight:bold;
- color:#42d9ff;
- letter-spacing:3px
-}
+body{margin:0;font-family:Arial,sans-serif;background:#080D1B;color:#edf5ff;min-height:100vh;display:flex;flex-direction:column}
+header{padding:19px;text-align:center;border-bottom:1px solid #23344f;background:#0d1629}
+.logo{font-size:29px;font-weight:bold;color:#42d9ff;letter-spacing:3px}
 header p{color:#9aacc5;font-size:13px;margin:7px 0 0}
-main{
- width:100%;
- max-width:850px;
- margin:auto;
- padding:20px;
- flex:1;
- display:flex;
- flex-direction:column
-}
-.welcome{
- text-align:center;
- margin:35px 0 22px
-}
+main{width:100%;max-width:850px;margin:auto;padding:20px;flex:1;display:flex;flex-direction:column}
+.welcome{text-align:center;margin:35px 0 22px}
 .welcome h1{font-size:25px;color:#fff}
 .welcome p{color:#9aacc5;line-height:1.6}
-#chat{
- display:flex;
- flex-direction:column;
- gap:16px;
- padding-bottom:20px
-}
-.message{
- padding:15px;
- border-radius:15px;
- line-height:1.6;
- white-space:pre-wrap;
- overflow-wrap:anywhere
-}
-.user{
- background:#173b60;
- align-self:flex-end;
- max-width:90%;
- border:1px solid #2674a9
-}
-.bot{
- background:#111e33;
- border:1px solid #263c5b;
- align-self:stretch
-}
-.bot strong{color:#43d8ff}
+#chat{display:flex;flex-direction:column;gap:16px;padding-bottom:20px}
+.message{padding:15px;border-radius:15px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+.user{background:#173b60;align-self:flex-end;max-width:90%;border:1px solid #2674a9}
+.bot{background:#111e33;border:1px solid #263c5b;align-self:stretch}
 .sources{margin-top:12px;border-top:1px solid #30415a;padding-top:10px}
+.sources strong{color:#43d8ff}
 .sources a{color:#55d9ff;display:block;margin:8px 0;overflow-wrap:anywhere}
 #status{color:#9aacc5;font-size:13px;padding:8px}
-form{
- position:sticky;
- bottom:0;
- background:#080D1B;
- padding:12px 0 18px;
- display:flex;
- gap:9px
-}
-textarea{
- flex:1;
- min-width:0;
- min-height:54px;
- max-height:140px;
- resize:vertical;
- padding:16px;
- border-radius:14px;
- border:1px solid #315174;
- background:#111e33;
- color:white;
- font-size:16px;
- outline:none
-}
+form{position:sticky;bottom:0;background:#080D1B;padding:12px 0 18px;display:flex;gap:9px}
+textarea{flex:1;min-width:0;min-height:54px;max-height:140px;resize:vertical;padding:16px;border-radius:14px;border:1px solid #315174;background:#111e33;color:white;font-size:16px;outline:none}
 textarea:focus{border-color:#42d9ff}
-button{
- border:0;
- border-radius:13px;
- padding:0 19px;
- background:#12a9d5;
- color:white;
- font-size:15px;
- font-weight:bold;
- cursor:pointer
-}
+button{border:0;border-radius:13px;padding:0 19px;background:#12a9d5;color:white;font-size:15px;font-weight:bold;cursor:pointer}
 button:disabled{opacity:.5}
-.examples{
- display:flex;
- flex-wrap:wrap;
- gap:8px;
- justify-content:center;
- margin-bottom:20px
-}
-.examples button{
- background:#142640;
- border:1px solid #294765;
- padding:10px;
- font-size:12px
-}
-footer{
- text-align:center;
- padding:13px;
- color:#647c99;
- font-size:11px
-}
+.examples{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:20px}
+.examples button{background:#142640;border:1px solid #294765;padding:10px;font-size:12px}
+footer{text-align:center;padding:13px;color:#647c99;font-size:11px}
 </style>
 </head>
-
 <body>
 <header>
- <div class="logo">IAGAM</div>
- <p>Inteligencia que busca contigo</p>
+<div class="logo">IAGAM</div>
+<p>Inteligencia que busca contigo</p>
 </header>
-
 <main>
- <section class="welcome" id="welcome">
-  <h1>¿Qué quieres descubrir?</h1>
-  <p>Pregunta, investiga, aprende o solicita un resumen.<br>
-  IAGAM buscará información y te mostrará sus fuentes.</p>
- </section>
-
- <div class="examples" id="examples">
-  <button type="button" onclick="example('¿Para qué sirve el oxígeno?')">¿Para qué sirve el oxígeno?</button>
-  <button type="button" onclick="example('Explícame qué es la inteligencia artificial')">¿Qué es la IA?</button>
-  <button type="button" onclick="example('Hazme un resumen sobre el sistema solar')">Resumir el sistema solar</button>
- </div>
-
- <section id="chat" aria-live="polite"></section>
- <div id="status"></div>
-
- <form id="form">
-  <textarea id="question" placeholder="Escribe tu pregunta..." rows="1" required></textarea>
-  <button id="send" type="submit">Enviar</button>
- </form>
+<section class="welcome" id="welcome">
+<h1>¿Qué quieres descubrir?</h1>
+<p>Pregunta, investiga, aprende o solicita un resumen.<br>IAGAM buscará información y te mostrará sus fuentes.</p>
+</section>
+<div class="examples" id="examples">
+<button type="button" onclick="example('¿Para qué sirve el oxígeno?')">¿Para qué sirve el oxígeno?</button>
+<button type="button" onclick="example('Explícame qué es la inteligencia artificial con palabras sencillas')">¿Qué es la IA?</button>
+<button type="button" onclick="example('Hazme un resumen sobre el sistema solar')">Resumir el sistema solar</button>
+</div>
+<section id="chat" aria-live="polite"></section>
+<div id="status"></div>
+<form id="form">
+<textarea id="question" placeholder="Escribe tu pregunta..." rows="1" required></textarea>
+<button id="send" type="submit">Enviar</button>
+</form>
 </main>
-
-<footer>
- IAGAM · Información consultada en fuentes abiertas
-</footer>
-
+<footer>IAGAM · Información consultada en fuentes abiertas</footer>
 <script>
-const chat=document.getElementById("chat");
-const form=document.getElementById("form");
-const input=document.getElementById("question");
-const send=document.getElementById("send");
-const statusBox=document.getElementById("status");
-let historyContext=[];
+const chat=document.getElementById("chat"),form=document.getElementById("form"),input=document.getElementById("question"),send=document.getElementById("send"),statusBox=document.getElementById("status");
 
 function addMessage(text,type,sources=[]){
  const box=document.createElement("div");
  box.className="message "+type;
- box.textContent=text;
-
+ const body=document.createElement("div");
+ body.textContent=text;
+ box.appendChild(body);
  if(sources.length){
   const area=document.createElement("div");
   area.className="sources";
   const title=document.createElement("strong");
   title.textContent="Fuentes consultadas:";
   area.appendChild(title);
-
   sources.forEach(source=>{
    const link=document.createElement("a");
    link.href=source.url;
@@ -197,84 +87,93 @@ function addMessage(text,type,sources=[]){
  box.scrollIntoView({behavior:"smooth",block:"end"});
 }
 
-function example(text){
- input.value=text;
- form.requestSubmit();
-}
+function example(text){input.value=text;form.requestSubmit();}
 
 function cleanQuery(text){
  return text
+  .replace(/[¿?¡!«»“”"]/g," ")
   .replace(/^(hola[,! ]*|por favor[, ]*)/i,"")
-  .replace(/^(hazme un resumen de|resume|resúmeme|resumen de|explícame|explica|qué es|que es|quién fue|quien fue|para qué sirve|para que sirve)\s*/i,"")
-  .trim();
+  .replace(/^(hazme un resumen de|haz un resumen de|resume|resúmeme|resumen de|explícame|explicame|explica|qué es|que es|quién fue|quien fue|para qué sirve|para que sirve)\s*/i,"")
+  .replace(/\s+(con palabras sencillas|en palabras sencillas|de forma sencilla|con ejemplos)$/i,"")
+  .replace(/\s+/g," ").trim();
 }
 
-function wantsSummary(text){
- return /resumen|resume|resúmeme|resumir|sintetiza/i.test(text);
-}
+function wantsSummary(text){return /resumen|resume|resúmeme|resumir|sintetiza/i.test(text);}
+function wantsSimple(text){return /sencill|fácil|facil|simple|niños|ninos/i.test(text);}
 
 async function searchWikipedia(query){
- const endpoint="https://es.wikipedia.org/w/api.php";
  const params=new URLSearchParams({
-  action:"query",
-  list:"search",
-  srsearch:query,
-  srlimit:"5",
-  format:"json",
-  origin:"*"
+  action:"query",list:"search",srsearch:query,
+  srlimit:"5",format:"json",origin:"*"
  });
-
- const response=await fetch(endpoint+"?"+params);
- if(!response.ok) throw new Error("No se pudo consultar Wikipedia");
+ const response=await fetch("https://es.wikipedia.org/w/api.php?"+params);
+ if(!response.ok)throw new Error("No se pudo consultar Wikipedia");
  const data=await response.json();
- return data.query?.search || [];
+ return data.query?.search||[];
 }
 
 async function getArticle(pageid){
  const params=new URLSearchParams({
-  action:"query",
-  pageids:String(pageid),
-  prop:"extracts",
-  exintro:"1",
-  explaintext:"1",
-  exchars:"4500",
-  format:"json",
-  origin:"*"
+  action:"query",pageids:String(pageid),prop:"extracts",
+  exintro:"1",explaintext:"1",exchars:"3000",
+  format:"json",origin:"*"
  });
  const response=await fetch("https://es.wikipedia.org/w/api.php?"+params);
- if(!response.ok) throw new Error("No se pudo cargar el artículo");
+ if(!response.ok)throw new Error("No se pudo cargar el artículo");
  const data=await response.json();
  const page=data.query?.pages?.[pageid];
- return page ? {
+ return page?{
   title:page.title,
-  extract:page.extract || "",
+  extract:page.extract||"",
   url:"https://es.wikipedia.org/?curid="+pageid
- } : null;
+ }:null;
+}
+
+function splitSentences(text){
+ return text.replace(/\s+/g," ")
+  .split(/(?<=[.!?])\s+/)
+  .map(s=>s.trim())
+  .filter(s=>s.length>35);
 }
 
 function makeAnswer(original,articles){
- const useful=articles.filter(a=>a && a.extract.trim());
- if(!useful.length){
-  return "No encontré información suficiente para responder. Intenta formular la pregunta de otra manera.";
- }
+ const useful=articles.filter(a=>a&&a.extract.trim());
+ if(!useful.length)
+  return "No encontré información suficiente. Intenta escribir el tema con otras palabras.";
 
  const summary=wantsSummary(original);
- let answer="";
+ const simple=wantsSimple(original);
+ const article=useful[0];
+ let sentences=splitSentences(article.extract);
+ if(!sentences.length)sentences=[article.extract.slice(0,500)];
 
- if(summary){
-  answer="Aquí tienes un resumen de la información encontrada:\n\n";
- }else{
-  answer="Esto es lo que encontré sobre tu pregunta:\n\n";
+ const maxSentences=summary?3:4;
+ const maxChars=summary?600:850;
+ const selected=[];
+ let count=0;
+
+ for(const sentence of sentences){
+  if(selected.length>=maxSentences)break;
+  if(count+sentence.length>maxChars&&selected.length>0)break;
+  selected.push(sentence);
+  count+=sentence.length;
  }
 
- useful.slice(0,3).forEach((article,index)=>{
-  let text=article.extract;
-  if(text.length>1800) text=text.slice(0,1800).trim()+"…";
-  answer+=(useful.length>1 ? (index+1)+". " : "")+
-   article.title+"\n"+text+"\n\n";
- });
+ const heading=summary?"Resumen breve: ":
+  simple?"Explicación sencilla basada en la fuente: ":
+  "Información encontrada: ";
 
- answer+="Si quieres, puedes pedirme que amplíe alguno de estos temas o que lo explique con palabras más sencillas.";
+ let answer=heading+article.title+"\n\n"+
+  selected.map(s=>(summary?"• ":"")+
+  (simple?s.replace(/\b(utiliza|emplea)\b/gi,"usa"):s))
+  .join("\n\n");
+
+ if(useful.length>1)
+  answer+="\n\nTambién encontré información relacionada en "+
+  (useful.length-1)+" artículo(s) más; puedes consultar las fuentes.";
+
+ answer+="\n\nNota: IAGAM organiza y acorta extractos de Wikipedia; todavía no genera respuestas propias como una IA conversacional.";
+ answer+="\n\nSi quieres, puedes hacer otra pregunta para profundizar.";
  return answer;
 }
 
@@ -282,10 +181,9 @@ async function ask(question){
  document.getElementById("welcome").style.display="none";
  document.getElementById("examples").style.display="none";
  addMessage(question,"user");
- historyContext.push({role:"user",text:question});
-
  send.disabled=true;
  statusBox.textContent="Buscando información...";
+
  try{
   const query=cleanQuery(question);
   if(!query){
@@ -295,27 +193,23 @@ async function ask(question){
 
   const results=await searchWikipedia(query);
   if(!results.length){
-   addMessage("No encontré resultados para esa consulta. Prueba con otras palabras o un tema más específico.","bot");
+   addMessage("No encontré resultados. Prueba con otras palabras o con un tema más específico.","bot");
    return;
   }
 
-  statusBox.textContent="Leyendo y organizando la información...";
+  statusBox.textContent="Leyendo y preparando una respuesta breve...";
   const articles=await Promise.all(
    results.slice(0,3).map(item=>getArticle(item.pageid))
   );
 
-  const answer=makeAnswer(question,articles);
-  const sources=articles.filter(Boolean).map(a=>({
-   title:a.title,
-   url:a.url
-  }));
-
-  addMessage(answer,"bot",sources);
-  historyContext.push({role:"assistant",text:answer});
-  if(historyContext.length>12) historyContext=historyContext.slice(-12);
+  addMessage(
+   makeAnswer(question,articles),
+   "bot",
+   articles.filter(Boolean).map(a=>({title:a.title,url:a.url}))
+  );
 
  }catch(error){
-  addMessage("No pude consultar las fuentes en este momento. Comprueba tu conexión a internet e inténtalo de nuevo.","bot");
+  addMessage("No pude consultar las fuentes en este momento. Comprueba tu conexión e inténtalo de nuevo.","bot");
  }finally{
   statusBox.textContent="";
   send.disabled=false;
@@ -326,23 +220,20 @@ async function ask(question){
 form.addEventListener("submit",event=>{
  event.preventDefault();
  const question=input.value.trim();
- if(!question) return;
+ if(!question)return;
  input.value="";
  ask(question);
 });
 
 input.addEventListener("keydown",event=>{
- if(event.key==="Enter" && !event.shiftKey){
+ if(event.key==="Enter"&&!event.shiftKey){
   event.preventDefault();
   form.requestSubmit();
  }
 });
 
 if("serviceWorker" in navigator){
- window.addEventListener("load",()=>{
-  navigator.serviceWorker.register("./service-worker.js")
-   .catch(error=>console.log("Service Worker:",error));
- });
+ window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(error=>console.log("Service Worker:",error)));
 }
 </script>
 </body>
