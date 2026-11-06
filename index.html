@@ -8,7 +8,6 @@
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
 <title>IAGAM - Inteligencia que busca contigo</title>
-
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#080D1B;color:#edf5ff;min-height:100vh;display:flex;flex-direction:column}
@@ -91,7 +90,6 @@ footer{text-align:center;padding:13px;color:#647c99;font-size:11px}
 @media(max-width:500px){main{padding:14px}.welcome{margin-top:25px}}
 </style>
 </head>
-
 <body>
 <section id="intro" aria-label="Bienvenido a IAGAM">
  <div class="intro-grid"></div>
@@ -122,12 +120,10 @@ footer{text-align:center;padding:13px;color:#647c99;font-size:11px}
  <h1>¿Qué quieres descubrir?</h1>
  <p>Busca información, aprende y prepara resúmenes de diferentes temas.</p>
 </section>
-
 <div class="menu-buttons">
  <button type="button" id="searchTab" class="active">🔎 Buscar información</button>
  <button type="button" id="mathTab">🧮 Matemáticas</button>
 </div>
-
 <section id="searchView" class="view active">
  <div class="controls">
   <label for="summaryLength">Extensión de la respuesta:</label>
@@ -149,12 +145,12 @@ footer{text-align:center;padding:13px;color:#647c99;font-size:11px}
 <section id="mathView" class="view">
  <div class="math-card">
   <h2>🧮 Matemáticas IAGAM</h2>
-  <p>Escribe una operación y obtén el resultado con sus pasos reales.</p>
+  <p>Escribe una operación y obtén una explicación fácil, corta y paso a paso.</p>
   <label for="mathInput">Tu operación matemática</label>
   <textarea id="mathInput" placeholder="" rows="2"></textarea>
   <button type="button" class="math-action" id="calculateButton">Calcular</button>
   <div id="mathStatus" role="status"></div>
-  <div class="math-result" id="mathResult" aria-live="polite">Aquí aparecerá el resultado y su procedimiento.</div>
+  <div class="math-result" id="mathResult" aria-live="polite">Aquí aparecerá el resultado y su explicación.</div>
   <p class="math-help">Admite +, −, ×, ÷, paréntesis, potencias (^), porcentajes (%) y raíces cuadradas (√ o raiz). Usa punto o coma para decimales. No escribas el signo =.</p>
  </div>
 </section>
@@ -224,7 +220,7 @@ function showView(name){
  document.getElementById("welcome").querySelector("h1").textContent=searching?"¿Qué quieres descubrir?":"Resuelve tus operaciones";
  document.getElementById("welcome").querySelector("p").textContent=searching
   ?"Busca información, aprende y prepara resúmenes de diferentes temas."
-  :"Calcula operaciones matemáticas y consulta el procedimiento paso a paso.";
+  :"Calcula operaciones matemáticas y consulta una explicación sencilla paso a paso.";
 }
 searchTab.addEventListener("click",()=>showView("search"));
 mathTab.addEventListener("click",()=>showView("math"));
@@ -320,16 +316,38 @@ function calculateExpression(raw){
  if(!Number.isFinite(value))throw new Error("El resultado es demasiado grande o no es válido.");
  return {value,steps};
 }
+
+/* EXPLICACIONES FÁCILES Y CORTAS */
 function explainMath(expression,calculation){
- let explanation="Operación: "+expression+"\n\nProcedimiento paso a paso:\n";
- if(calculation.steps.length){
-  calculation.steps.forEach((step,index)=>{explanation+=(index+1)+". "+step+"\n"});
+ const fmt=n=>Number(n.toFixed(2)).toString();
+ const steps=calculation.steps;
+ let explanation="Operación: "+expression+"\n\n";
+ explanation+="EXPLICACIÓN FÁCIL:\n";
+
+ const normalized=expression.toLowerCase();
+ if(expression.includes("√")||normalized.includes("raiz")||normalized.includes("sqrt")){
+  explanation+="1. La raíz cuadrada busca un número que, multiplicado por sí mismo, se acerque al número que está dentro de la raíz.\n";
+  explanation+="2. "+fmt(calculation.value)+" × "+fmt(calculation.value)+" ≈ "+fmt(calculation.value*calculation.value)+".\n";
+ }else if(steps.length){
+  steps.forEach((step,index)=>{
+   const operation=step.split(" = ")[0];
+   let reason="Resolvemos esta parte de la operación.";
+   if(operation.includes("×")) reason="Multiplicamos los dos números.";
+   else if(operation.includes("÷")) reason="Dividimos el primer número entre el segundo.";
+   else if(operation.includes(" + ")) reason="Sumamos los dos números.";
+   else if(operation.includes(" - ")) reason="Restamos el segundo número al primero.";
+   else if(operation.includes("^")) reason="Calculamos la potencia.";
+   else if(operation.includes("%")) reason="Convertimos el porcentaje a una cantidad decimal.";
+   explanation+=(index+1)+". "+reason+"\n   "+step+"\n";
+  });
  }else{
-  explanation+="La expresión contiene un solo número, no requiere operaciones.\n";
+  explanation+="Esta operación no necesita pasos adicionales.\n";
  }
- explanation+="\nResultado final: "+Number(calculation.value.toPrecision(12));
+
+ explanation+="\nRESULTADO FINAL: "+fmt(calculation.value);
  return explanation;
 }
+
 function runCalculation(){
  const expression=mathInput.value.trim();
  try{
@@ -362,8 +380,8 @@ const stopWords=new Set([
  "resumen","resume","resumir","resumeme","explicame","explica","dime","quiero",
  "saber","informacion","tema","favor","acerca","dame","necesito","es","un",
  "de","la","el","al","en","y","o","a","se","su","mi","me","lo","cuanto",
- "cuantos","cuanta","cuantas","tiene","tienen","dias","día","día","del",
- "cuál","cuáles","quién","quiénes","fue","son","era","eran","hay","cuándo"
+ "cuantos","cuanta","cuantas","tiene","tienen","dias","día","del",
+ "cuál","cuáles","quién","quiénes","era","eran","cuándo"
 ]);
 
 function normalize(text){
@@ -376,31 +394,26 @@ function getWords(text){
  return normalize(text).split(" ").filter(word=>word.length>2&&!stopWords.has(word));
 }
 
-/* Reconoce preguntas sencillas que tienen una respuesta directa y comprobable. */
 function answerKnownQuestion(question){
  const q=normalize(question);
-
  if(/\bcuantos dias tiene (un|el) ano\b/.test(q)){
   return {
    answer:"Un año normal tiene 365 días. Un año bisiesto tiene 366 días.\n\n¿Por qué? La Tierra tarda aproximadamente 365 días y 6 horas en completar una vuelta alrededor del Sol. Esas horas se acumulan y, aproximadamente cada cuatro años, se añade un día al calendario: el 29 de febrero.\n\nEn resumen:\n• Año normal: 365 días.\n• Año bisiesto: 366 días.",
    sources:[{title:"Año bisiesto - Wikipedia",url:"https://es.wikipedia.org/wiki/A%C3%B1o_bisiesto"}]
   };
  }
-
  if(/\bcuantos meses tiene (un|el) ano\b/.test(q)){
   return {
    answer:"Un año tiene 12 meses: enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre y diciembre.",
    sources:[{title:"Año - Wikipedia",url:"https://es.wikipedia.org/wiki/A%C3%B1o"}]
   };
  }
-
  if(/\bcuantas semanas tiene (un|el) ano\b/.test(q)){
   return {
    answer:"Un año normal tiene 52 semanas y 1 día. Un año bisiesto tiene 52 semanas y 2 días.",
    sources:[{title:"Año - Wikipedia",url:"https://es.wikipedia.org/wiki/A%C3%B1o"}]
   };
  }
-
  return null;
 }
 
@@ -431,7 +444,6 @@ function addMessage(text,type,sources=[]){
  const body=document.createElement("div");
  body.textContent=text;
  box.appendChild(body);
-
  if(sources.length){
   const area=document.createElement("div");
   area.className="sources";
@@ -452,17 +464,13 @@ function addMessage(text,type,sources=[]){
  box.scrollIntoView({behavior:"smooth",block:"end"});
 }
 
-/* Compara el tema completo, no solamente una palabra suelta. */
 function titleScore(queryWords,title){
  const titleWords=getWords(title);
  let matched=0;
  queryWords.forEach(word=>{
   if(titleWords.some(t=>t===word||t.startsWith(word)||word.startsWith(t)))matched++;
  });
- return {
-  matched,
-  ratio:queryWords.length?matched/queryWords.length:0
- };
+ return {matched,ratio:queryWords.length?matched/queryWords.length:0};
 }
 
 async function searchWikipedia(query){
@@ -507,25 +515,20 @@ function simplifySentence(sentence){
 function makeAnswer(original,article){
  const paragraphs=splitIntro(article.extract);
  if(!paragraphs.length)return "Encontré el artículo, pero no pude obtener información suficiente para preparar una respuesta fiable. Consulta la fuente original.";
-
  const simple=wantsSimple(original);
  const length=summaryLength.value;
  let definitionCount=1,featureCount=2,dataCount=1;
  if(length==="short"){definitionCount=1;featureCount=1;dataCount=0}
  else if(length==="long"){definitionCount=2;featureCount=5;dataCount=3}
-
  const firstParagraph=paragraphs[0];
  const definition=firstParagraph.slice(0,definitionCount);
  let remaining=firstParagraph.slice(definition.length);
  for(let i=1;i<paragraphs.length;i++)remaining=remaining.concat(paragraphs[i]);
-
  const features=remaining.slice(0,featureCount);
  const data=remaining.slice(featureCount,featureCount+dataCount);
  const format=s=>simple?simplifySentence(s):s;
-
  let answer=(wantsSummary(original)?"RESUMEN: ":"INFORMACIÓN: ")+article.title+"\n\n";
  answer+="¿QUÉ ES?\n"+definition.map(format).join(" ")+"\n\n";
-
  if(features.length){
   answer+="CARACTERÍSTICAS PRINCIPALES\n";
   features.forEach(s=>answer+="• "+format(s)+"\n\n");
@@ -534,7 +537,6 @@ function makeAnswer(original,article){
   answer+="OTROS DATOS IMPORTANTES\n";
   data.forEach(s=>answer+="• "+format(s)+"\n\n");
  }
-
  answer+="CONCLUSIÓN\nLa información anterior se basa en el artículo consultado sobre "+article.title+". Puedes abrir la fuente para leer más detalles.";
  answer+="\n\nNota: IAGAM organiza información de fuentes públicas. Comprueba los datos importantes en las fuentes originales.";
  return answer.trim();
@@ -545,73 +547,47 @@ async function ask(question){
  document.getElementById("newSearch").hidden=false;
  send.disabled=true;
  statusBox.textContent="Analizando tu pregunta...";
-
  try{
-  /* Primero revisa si es una pregunta directa conocida. */
   const directAnswer=answerKnownQuestion(question);
   if(directAnswer){
    addMessage(directAnswer.answer,"bot",directAnswer.sources);
    return;
   }
-
   const query=cleanQuery(question);
   const queryWords=getWords(query);
-
   if(!query||!queryWords.length){
    addMessage("No pude identificar el tema de tu pregunta. Intenta escribirlo con otras palabras o indica el tema específico.","bot");
    return;
   }
-
   statusBox.textContent="Buscando información relacionada...";
   const results=await searchWikipedia(query);
-
   if(!results.length){
    addMessage("No encontré una fuente adecuada para responder esa pregunta. Prueba con otras palabras o escribe un tema más específico.","bot");
    return;
   }
-
-  const candidates=results.map(item=>({
-   ...item,
-   relevance:titleScore(queryWords,item.title)
-  }))
-  .filter(item=>item.relevance.matched>0)
-  .sort((a,b)=>
-   b.relevance.ratio-a.relevance.ratio||
-   b.relevance.matched-a.relevance.matched
-  );
-
+  const candidates=results.map(item=>({...item,relevance:titleScore(queryWords,item.title)}))
+   .filter(item=>item.relevance.matched>0)
+   .sort((a,b)=>b.relevance.ratio-a.relevance.ratio||b.relevance.matched-a.relevance.matched);
   if(!candidates.length){
    addMessage("Encontré resultados, pero sus títulos no coinciden suficientemente con el tema de tu pregunta. No quiero mostrarte información que pueda ser incorrecta. Intenta formularla de otra manera.","bot");
    return;
   }
-
   statusBox.textContent="Comprobando que los resultados correspondan al tema...";
-  const articles=await Promise.all(
-   candidates.slice(0,6).map(item=>getArticle(item.pageid).catch(()=>null))
-  );
+  const articles=await Promise.all(candidates.slice(0,6).map(item=>getArticle(item.pageid).catch(()=>null)));
   const valid=articles.filter(a=>a&&a.extract&&a.extract.length>80);
-
   if(!valid.length){
    addMessage("No pude obtener información suficiente de las fuentes encontradas. Intenta de nuevo más tarde.","bot");
    return;
   }
-
-  /* No aceptar coincidencias débiles en búsquedas de varias palabras. */
-  const best=valid.map(article=>({
-   article,
-   score:titleScore(queryWords,article.title)
-  })).sort((a,b)=>b.score.ratio-a.score.ratio||b.score.matched-a.score.matched)[0];
-
+  const best=valid.map(article=>({article,score:titleScore(queryWords,article.title)}))
+   .sort((a,b)=>b.score.ratio-a.score.ratio||b.score.matched-a.score.matched)[0];
   const minimumMatches=queryWords.length===1?1:Math.max(2,Math.ceil(queryWords.length*.5));
-
   if(best.score.matched<minimumMatches){
    addMessage("No encontré un artículo cuyo título coincida lo suficiente con tu pregunta. Prefiero avisarte antes que darte una respuesta de otro tema. Prueba usando el nombre específico del tema.","bot");
    return;
   }
-
   const sourceList=valid.slice(0,3).map(a=>({title:a.title,url:a.url}));
   addMessage(makeAnswer(question,best.article),"bot",sourceList);
-
  }catch(error){
   addMessage("No pude consultar las fuentes en este momento. Comprueba tu conexión e inténtalo de nuevo.","bot");
  }finally{
@@ -620,7 +596,6 @@ async function ask(question){
   input.focus();
  }
 }
-
 form.addEventListener("submit",event=>{
  event.preventDefault();
  const question=input.value.trim();
@@ -641,45 +616,31 @@ if("serviceWorker" in navigator){
    .catch(error=>console.log("Service Worker:",error));
  });
 }
-/* =====================================
-   IAGAM - MOTOR DE INTELIGENCIA ARTIFICIAL
-   ESTRUCTURA PREPARADA PARA FUTURO PROVEEDOR
-===================================== */
 
-const IAGAM_AI = {
-  provider: "none",
-  connected: false,
-
-  // Aquí se conectará un proveedor compatible
-  // cuando tengamos una integración segura.
-
-  async generateResponse(question) {
-    if (!this.connected) {
-      return {
-        success: false,
-        message: "El motor de inteligencia artificial todavía no está conectado."
-      };
-    }
-
-    return {
-      success: false,
-      message: "La conexión con el proveedor aún está pendiente."
-    };
+/* ESTRUCTURA PARA FUTURA INTEGRACIÓN DE IA */
+const IAGAM_AI={
+ provider:"none",
+ connected:false,
+ async generateResponse(question){
+  if(!this.connected){
+   return {
+    success:false,
+    message:"El motor de inteligencia artificial todavía no está conectado."
+   };
   }
+  return {
+   success:false,
+   message:"La conexión con el proveedor aún está pendiente."
+  };
+ }
 };
-
-/* Información del sistema */
-const IAGAM_SYSTEM = {
-  name: "IAGAM",
-  version: "1.0",
-  language: "es",
-  features: [
-    "information_search",
-    "mathematics",
-    "ai_integration_ready"
-  ]
+const IAGAM_SYSTEM={
+ name:"IAGAM",
+ version:"1.0",
+ language:"es",
+ features:["information_search","mathematics","ai_integration_ready"]
 };
-
-console.log("IAGAM: estructura preparada.");</script>
+console.log("IAGAM: estructura preparada.");
+</script>
 </body>
 </html>
