@@ -641,6 +641,45 @@ if("serviceWorker" in navigator){
    .catch(error=>console.log("Service Worker:",error));
  });
 }
-</script>
+/* =====================================
+   IAGAM - MOTOR DE INTELIGENCIA ARTIFICIAL
+   ESTRUCTURA PREPARADA PARA FUTURO PROVEEDOR
+===================================== */
+
+const IAGAM_AI = {
+  provider: "none",
+  connected: false,
+
+  // Aquí se conectará un proveedor compatible
+  // cuando tengamos una integración segura.
+
+  async generateResponse(question) {
+    if (!this.connected) {
+      return {
+        success: false,
+        message: "El motor de inteligencia artificial todavía no está conectado."
+      };
+    }
+
+    return {
+      success: false,
+      message: "La conexión con el proveedor aún está pendiente."
+    };
+  }
+};
+
+/* Información del sistema */
+const IAGAM_SYSTEM = {
+  name: "IAGAM",
+  version: "1.0",
+  language: "es",
+  features: [
+    "information_search",
+    "mathematics",
+    "ai_integration_ready"
+  ]
+};
+
+console.log("IAGAM: estructura preparada.");</script>
 </body>
 </html>
