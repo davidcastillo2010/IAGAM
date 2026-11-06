@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,17 +8,18 @@
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./icon.svg" type="image/svg+xml">
 <title>IAGAM - Inteligencia que busca contigo</title>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#080D1B;color:#edf5ff;min-height:100vh;display:flex;flex-direction:column}
-#intro{position:fixed;inset:0;z-index:99999;background:radial-gradient(ellipse at center,#102b49 0%,#080d1b 65%);display:flex;align-items:center;justify-content:center;flex-direction:column;overflow:hidden;transition:opacity .6s ease,visibility .6s ease}
+#intro{position:fixed;inset:0;z-index:99999;background:radial-gradient(ellipse at center,#102b49,#080d1b 65%);display:flex;align-items:center;justify-content:center;flex-direction:column;overflow:hidden;transition:opacity .6s,visibility .6s}
 #intro.hide{opacity:0;visibility:hidden;pointer-events:none}
 .intro-grid{position:absolute;inset:0;opacity:.16;background-image:linear-gradient(#42d9ff 1px,transparent 1px),linear-gradient(90deg,#42d9ff 1px,transparent 1px);background-size:38px 38px;transform:perspective(400px) rotateX(55deg) scale(2);animation:gridMove 4s linear infinite}
 @keyframes gridMove{to{background-position:0 38px}}
 .intro-content{position:relative;z-index:2;display:flex;align-items:center;flex-direction:column;text-align:center;padding:20px;width:100%}
 .robot{width:190px;height:210px;position:relative;margin-bottom:15px;animation:robotFloat 1.2s ease-in-out infinite alternate}
-@keyframes robotFloat{from{transform:translateY(5px)}to{transform:translateY(-8px)}}
-.robot-head{position:absolute;top:12px;left:48px;width:94px;height:75px;border-radius:25px;background:linear-gradient(145deg,#d8f7ff,#4a9dc5 65%,#17618e);border:3px solid #74eaff;box-shadow:0 0 22px #20cfff88,inset 0 -7px 12px #075078;z-index:3}
+@keyframes robotFloat{to{transform:translateY(-8px)}}
+.robot-head{position:absolute;top:12px;left:48px;width:94px;height:75px;border-radius:25px;background:linear-gradient(145deg,#d8f7ff,#4a9dc5 65%,#17618e);border:3px solid #74eaff;box-shadow:0 0 22px #20cfff88;z-index:3}
 .robot-head:before{content:"";position:absolute;top:-15px;left:39px;width:12px;height:16px;background:#42d9ff;border-radius:8px 8px 0 0}
 .robot-head:after{content:"";position:absolute;top:-23px;left:42px;width:7px;height:7px;border-radius:50%;background:#9af5ff;box-shadow:0 0 14px #42d9ff}
 .robot-eye{position:absolute;top:27px;width:13px;height:13px;border-radius:50%;background:#54f5ff;box-shadow:0 0 12px #42d9ff}
@@ -27,9 +27,9 @@ body{margin:0;font-family:Arial,sans-serif;background:#080D1B;color:#edf5ff;min-
 .robot-mouth{position:absolute;bottom:13px;left:35px;width:23px;height:5px;border-radius:5px;background:#17618e}
 .robot-ear{position:absolute;top:37px;width:12px;height:25px;border-radius:5px;background:#2494c0;border:2px solid #6eeaff}
 .robot-ear.left{left:-12px}.robot-ear.right{right:-12px}
-.robot-body{position:absolute;top:91px;left:57px;width:76px;height:78px;border-radius:19px;background:linear-gradient(145deg,#8ceaff,#17618e);border:3px solid #53dcff;box-shadow:0 0 20px #20cfff66,inset 0 -8px 10px #06456a}
+.robot-body{position:absolute;top:91px;left:57px;width:76px;height:78px;border-radius:19px;background:linear-gradient(145deg,#8ceaff,#17618e);border:3px solid #53dcff;box-shadow:0 0 20px #20cfff66}
 .robot-core{position:absolute;top:19px;left:21px;width:28px;height:28px;border-radius:50%;background:#50f5ff;border:4px solid #d9ffff;box-shadow:0 0 18px #42d9ff;animation:corePulse .8s infinite alternate}
-@keyframes corePulse{from{transform:scale(.8);opacity:.7}to{transform:scale(1.12);opacity:1}}
+@keyframes corePulse{to{transform:scale(1.12);opacity:1}}
 .robot-arm{position:absolute;top:103px;width:17px;height:54px;border-radius:12px;background:#2c8db8;border:2px solid #65e5ff;transform-origin:top center}
 .robot-arm.left{left:39px;animation:armLeft .7s infinite alternate}
 .robot-arm.right{right:39px;animation:armRight .7s infinite alternate}
@@ -44,13 +44,12 @@ body{margin:0;font-family:Arial,sans-serif;background:#080D1B;color:#edf5ff;min-
 .building{width:230px;height:5px;border-radius:5px;background:#193c5b;position:relative;overflow:hidden}
 .building:after{content:"";position:absolute;inset:0;width:0;background:#55edff;box-shadow:0 0 12px #42d9ff;animation:buildProgress 3.5s linear forwards}
 @keyframes buildProgress{to{width:100%}}
-.intro-name{margin-top:22px;font-size:36px;font-weight:900;letter-spacing:7px;color:#48e5ff;text-shadow:0 0 12px #16bde9,0 0 28px #16bde9;animation:nameAppear .8s ease 2.8s both}
-@keyframes nameAppear{from{opacity:0;transform:scale(.6);filter:blur(8px)}to{opacity:1;transform:scale(1);filter:blur(0)}}
-.intro-subtitle{margin-top:8px;color:#a9c8df;font-size:13px;letter-spacing:2px;animation:nameAppear .8s ease 3s both}
+.intro-name{margin-top:22px;font-size:36px;font-weight:900;letter-spacing:7px;color:#48e5ff;text-shadow:0 0 12px #16bde9;animation:nameAppear .8s ease 2.8s both}
+.intro-subtitle{margin-top:8px;color:#a9c8df;font-size:13px;letter-spacing:2px}
 .intro-status{margin-top:20px;color:#63dfff;font-size:12px;letter-spacing:1px;min-height:18px}
 .intro-buttons{margin-top:22px}
 .intro-buttons button{border:1px solid #347da5;background:#102c48;color:#d9f8ff;border-radius:20px;padding:11px 25px;font-size:14px;font-weight:bold}
-#intro.hide .intro-content{transform:scale(1.08);transition:transform .5s}
+@keyframes nameAppear{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:scale(1)}}
 #appShell{visibility:hidden}
 #appShell.ready{visibility:visible}
 @media(prefers-reduced-motion:reduce){.robot,.robot-core,.robot-arm,.spark,.building:after,.intro-name{animation:none!important}}
@@ -92,8 +91,8 @@ footer{text-align:center;padding:13px;color:#647c99;font-size:11px}
 @media(max-width:500px){main{padding:14px}.welcome{margin-top:25px}}
 </style>
 </head>
-<body>
 
+<body>
 <section id="intro" aria-label="Bienvenido a IAGAM">
  <div class="intro-grid"></div>
  <div class="intro-content">
@@ -255,7 +254,6 @@ function calculateExpression(raw){
  let pos=0;
  const steps=[];
  const fmt=n=>Number(n.toPrecision(12)).toString();
-
  function peek(){return tokens[pos]}
  function take(){return tokens[pos++]}
 
@@ -264,13 +262,11 @@ function calculateExpression(raw){
   if(t===undefined)throw new Error("La operación está incompleta.");
   if(t==="+")return primary();
   if(t==="-")return -primary();
-
   if(t==="("){
    const v=addSub();
    if(take()!==")")throw new Error("Falta cerrar un paréntesis.");
    return v;
   }
-
   if(t==="sqrt"){
    if(take()!=="(")throw new Error("Escribe la raíz como √(número).");
    const v=addSub();
@@ -280,34 +276,26 @@ function calculateExpression(raw){
    steps.push("√"+fmt(v)+" = "+fmt(result));
    return result;
   }
-
   if(!/^\d+(?:\.\d+)?$/.test(t))throw new Error("Revisa los números de la operación.");
   return Number(t);
  }
-
  function power(){
   let v=primary();
   if(peek()==="^"){
-   take();
-   const right=power();
-   const left=v;
+   take();const right=power(),left=v;
    v=Math.pow(left,right);
    steps.push(fmt(left)+" ^ "+fmt(right)+" = "+fmt(v));
   }
   return v;
  }
-
  function unary(){
   let v=power();
   while(peek()==="%"){
-   take();
-   const before=v;
-   v=v/100;
+   take();const before=v;v=v/100;
    steps.push(fmt(before)+"% = "+fmt(v));
   }
   return v;
  }
-
  function mulDiv(){
   let v=unary();
   while(peek()==="*"||peek()==="/"){
@@ -318,7 +306,6 @@ function calculateExpression(raw){
   }
   return v;
  }
-
  function addSub(){
   let v=mulDiv();
   while(peek()==="+"||peek()==="-"){
@@ -328,29 +315,21 @@ function calculateExpression(raw){
   }
   return v;
  }
-
  const value=addSub();
  if(pos!==tokens.length)throw new Error("No se pudo interpretar toda la operación.");
  if(!Number.isFinite(value))throw new Error("El resultado es demasiado grande o no es válido.");
  return {value,steps};
 }
-
 function explainMath(expression,calculation){
- let explanation="Operación: "+expression+"\n\n";
- explanation+="Procedimiento paso a paso:\n";
-
+ let explanation="Operación: "+expression+"\n\nProcedimiento paso a paso:\n";
  if(calculation.steps.length){
-  calculation.steps.forEach((step,index)=>{
-   explanation+=(index+1)+". "+step+"\n";
-  });
+  calculation.steps.forEach((step,index)=>{explanation+=(index+1)+". "+step+"\n"});
  }else{
   explanation+="La expresión contiene un solo número, no requiere operaciones.\n";
  }
-
  explanation+="\nResultado final: "+Number(calculation.value.toPrecision(12));
  return explanation;
 }
-
 function runCalculation(){
  const expression=mathInput.value.trim();
  try{
@@ -362,13 +341,12 @@ function runCalculation(){
   mathStatus.textContent=error.message||"Revisa la operación e inténtalo de nuevo.";
  }
 }
-
 document.getElementById("calculateButton").addEventListener("click",runCalculation);
 mathInput.addEventListener("keydown",event=>{
  if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();runCalculation()}
 });
 
-/* BÚSQUEDA Y RESÚMENES */
+/* BÚSQUEDA DE INFORMACIÓN */
 const chat=document.getElementById("chat");
 const form=document.getElementById("form");
 const input=document.getElementById("question");
@@ -377,137 +355,290 @@ const statusBox=document.getElementById("status");
 const summaryLength=document.getElementById("summaryLength");
 
 const stopWords=new Set([
- "que","para","con","por","una","uno","unos","unas","del","las","los",
+ "que","qué","para","con","por","una","uno","unos","unas","del","las","los",
  "como","sobre","desde","entre","tambien","este","esta","estos","estas",
- "puede","pueden","ser","son","fue","han","hay","sus","mas","muy",
- "cuando","donde","cual","quien","porque","todo","toda","todos","todas",
- "hazme","haz","resumen","resume","resumir","resumeme","explicame",
- "explica","dime","quiero","saber","informacion","tema","favor","acerca",
- "dame","necesito","es","un","de","la","el","al","en","y","o","a","se",
- "su","mi","me","lo"
+ "puede","pueden","ser","son","fue","han","hay","sus","mas","muy","cuando",
+ "donde","cual","quien","porque","todo","toda","todos","todas","hazme","haz",
+ "resumen","resume","resumir","resumeme","explicame","explica","dime","quiero",
+ "saber","informacion","tema","favor","acerca","dame","necesito","es","un",
+ "de","la","el","al","en","y","o","a","se","su","mi","me","lo","cuanto",
+ "cuantos","cuanta","cuantas","tiene","tienen","dias","día","día","del",
+ "cuál","cuáles","quién","quiénes","fue","son","era","eran","hay","cuándo"
 ]);
 
 function normalize(text){
- return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9\s]/g," ").replace(/\s+/g," ").trim();
+ return text.toLowerCase().normalize("NFD")
+ .replace(/[\u0300-\u036f]/g,"")
+ .replace(/[^a-z0-9\s]/g," ")
+ .replace(/\s+/g," ").trim();
 }
 function getWords(text){
  return normalize(text).split(" ").filter(word=>word.length>2&&!stopWords.has(word));
 }
+
+/* Reconoce preguntas sencillas que tienen una respuesta directa y comprobable. */
+function answerKnownQuestion(question){
+ const q=normalize(question);
+
+ if(/\bcuantos dias tiene (un|el) ano\b/.test(q)){
+  return {
+   answer:"Un año normal tiene 365 días. Un año bisiesto tiene 366 días.\n\n¿Por qué? La Tierra tarda aproximadamente 365 días y 6 horas en completar una vuelta alrededor del Sol. Esas horas se acumulan y, aproximadamente cada cuatro años, se añade un día al calendario: el 29 de febrero.\n\nEn resumen:\n• Año normal: 365 días.\n• Año bisiesto: 366 días.",
+   sources:[{title:"Año bisiesto - Wikipedia",url:"https://es.wikipedia.org/wiki/A%C3%B1o_bisiesto"}]
+  };
+ }
+
+ if(/\bcuantos meses tiene (un|el) ano\b/.test(q)){
+  return {
+   answer:"Un año tiene 12 meses: enero, febrero, marzo, abril, mayo, junio, julio, agosto, septiembre, octubre, noviembre y diciembre.",
+   sources:[{title:"Año - Wikipedia",url:"https://es.wikipedia.org/wiki/A%C3%B1o"}]
+  };
+ }
+
+ if(/\bcuantas semanas tiene (un|el) ano\b/.test(q)){
+  return {
+   answer:"Un año normal tiene 52 semanas y 1 día. Un año bisiesto tiene 52 semanas y 2 días.",
+   sources:[{title:"Año - Wikipedia",url:"https://es.wikipedia.org/wiki/A%C3%B1o"}]
+  };
+ }
+
+ return null;
+}
+
 function cleanQuery(text){
- let query=text.trim().replace(/[¿?¡!«»“”"]/g," ");
+ let query=text.trim();
+ query=query.replace(/[¿?¡!«»“”"]/g," ");
  query=query.replace(/^(hola[, ]*|por favor[, ]*)/i,"");
  query=query.replace(/^(hazme|haz|dame|quiero|necesito)\s+(un\s+)?(resumen|resumir)\s+(sobre|de|del|acerca de)\s+/i,"");
  query=query.replace(/^(resumen|resumir)\s+(sobre|de|del|acerca de)\s+/i,"");
  query=query.replace(/^(explícame|explicame|explica|dime|cuéntame|cuentame|háblame de|hablame de)\s+/i,"");
  query=query.replace(/^(qué es|que es|quién fue|quien fue|quién es|quien es|para qué sirve|para que sirve|cómo funciona|como funciona)\s+/i,"");
+ query=query.replace(/^(cuánto|cuantos|cuántos|cuantas|cuántas|dónde|donde|quién|quien|cuál|cual)\s+/i,"");
  query=query.replace(/\s+(con palabras sencillas|en palabras sencillas|de forma sencilla|con ejemplos|por favor)$/i,"");
  return query.replace(/\s+/g," ").trim();
 }
 function wantsSummary(text){return /resumen|resume|resumir|resúmeme|sintetiza/i.test(text)}
 function wantsSimple(text){return /sencill|fácil|facil|simple|niños|ninos/i.test(text)}
+
 function resetChat(){
- chat.innerHTML="";statusBox.textContent="";
- document.getElementById("newSearch").hidden=true;input.focus();
+ chat.innerHTML="";
+ statusBox.textContent="";
+ document.getElementById("newSearch").hidden=true;
+ input.focus();
 }
 function addMessage(text,type,sources=[]){
- const box=document.createElement("div");box.className="message "+type;
- const body=document.createElement("div");body.textContent=text;box.appendChild(body);
+ const box=document.createElement("div");
+ box.className="message "+type;
+ const body=document.createElement("div");
+ body.textContent=text;
+ box.appendChild(body);
+
  if(sources.length){
-  const area=document.createElement("div");area.className="sources";
-  const title=document.createElement("strong");title.textContent="Fuentes consultadas:";area.appendChild(title);
+  const area=document.createElement("div");
+  area.className="sources";
+  const title=document.createElement("strong");
+  title.textContent="Fuentes consultadas:";
+  area.appendChild(title);
   sources.forEach(source=>{
-   const link=document.createElement("a");link.href=source.url;link.target="_blank";
-   link.rel="noopener noreferrer";link.textContent=source.title;area.appendChild(link);
+   const link=document.createElement("a");
+   link.href=source.url;
+   link.target="_blank";
+   link.rel="noopener noreferrer";
+   link.textContent=source.title;
+   area.appendChild(link);
   });
   box.appendChild(area);
  }
- chat.appendChild(box);box.scrollIntoView({behavior:"smooth",block:"end"});
+ chat.appendChild(box);
+ box.scrollIntoView({behavior:"smooth",block:"end"});
 }
+
+/* Compara el tema completo, no solamente una palabra suelta. */
 function titleScore(queryWords,title){
- const titleWords=getWords(title);let matched=0;
+ const titleWords=getWords(title);
+ let matched=0;
  queryWords.forEach(word=>{
   if(titleWords.some(t=>t===word||t.startsWith(word)||word.startsWith(t)))matched++;
  });
- return {matched,ratio:queryWords.length?matched/queryWords.length:0};
+ return {
+  matched,
+  ratio:queryWords.length?matched/queryWords.length:0
+ };
 }
+
 async function searchWikipedia(query){
- const params=new URLSearchParams({action:"query",list:"search",srsearch:query,srlimit:"12",srprop:"snippet",format:"json",origin:"*"});
+ const params=new URLSearchParams({
+  action:"query",list:"search",srsearch:query,srlimit:"15",
+  srprop:"snippet",format:"json",origin:"*"
+ });
  const response=await fetch("https://es.wikipedia.org/w/api.php?"+params);
  if(!response.ok)throw new Error("Error al buscar");
- const data=await response.json();return data.query?.search||[];
+ const data=await response.json();
+ return data.query?.search||[];
 }
 async function getArticle(pageid){
- const params=new URLSearchParams({action:"query",pageids:String(pageid),prop:"extracts",explaintext:"1",exintro:"1",exchars:"9000",format:"json",origin:"*"});
+ const params=new URLSearchParams({
+  action:"query",pageids:String(pageid),prop:"extracts",
+  explaintext:"1",explaintext:"1",exintro:"1",exchars:"9000",
+  format:"json",origin:"*"
+ });
  const response=await fetch("https://es.wikipedia.org/w/api.php?"+params);
  if(!response.ok)throw new Error("Error al cargar el artículo");
- const data=await response.json();const page=data.query?.pages?.[pageid];
+ const data=await response.json();
+ const page=data.query?.pages?.[pageid];
  if(!page||!page.extract)return null;
- return {title:page.title,extract:page.extract,url:"https://es.wikipedia.org/?curid="+pageid};
+ return {
+  title:page.title,
+  extract:page.extract,
+  url:"https://es.wikipedia.org/?curid="+pageid
+ };
 }
 function splitIntro(extract){
  return extract.split(/\n+/).map(p=>p.trim()).filter(p=>p.length>45)
  .map(p=>p.replace(/\[[0-9]+\]/g,"").split(/(?<=[.!?])\s+/)
- .map(s=>s.trim()).filter(s=>s.length>35&&s.length<650)).filter(group=>group.length);
+ .map(s=>s.trim()).filter(s=>s.length>35&&s.length<650))
+ .filter(group=>group.length);
 }
 function simplifySentence(sentence){
- return sentence.replace(/\b(utiliza|emplea|mediante)\b/gi,"usa").replace(/\bdenominado\b/gi,"llamado").replace(/\bconstituye\b/gi,"es").replace(/\bposteriormente\b/gi,"después");
+ return sentence.replace(/\b(utiliza|emplea|mediante)\b/gi,"usa")
+ .replace(/\bdenominado\b/gi,"llamado")
+ .replace(/\bconstituye\b/gi,"es")
+ .replace(/\bposteriormente\b/gi,"después");
 }
 function makeAnswer(original,article){
  const paragraphs=splitIntro(article.extract);
- if(!paragraphs.length)return "Encontré el artículo, pero no pude obtener una introducción suficiente para preparar un resumen fiable. Consulta la fuente original.";
- const simple=wantsSimple(original);const length=summaryLength.value;
+ if(!paragraphs.length)return "Encontré el artículo, pero no pude obtener información suficiente para preparar una respuesta fiable. Consulta la fuente original.";
+
+ const simple=wantsSimple(original);
+ const length=summaryLength.value;
  let definitionCount=1,featureCount=2,dataCount=1;
  if(length==="short"){definitionCount=1;featureCount=1;dataCount=0}
  else if(length==="long"){definitionCount=2;featureCount=5;dataCount=3}
- const firstParagraph=paragraphs[0];const definition=firstParagraph.slice(0,definitionCount);
+
+ const firstParagraph=paragraphs[0];
+ const definition=firstParagraph.slice(0,definitionCount);
  let remaining=firstParagraph.slice(definition.length);
  for(let i=1;i<paragraphs.length;i++)remaining=remaining.concat(paragraphs[i]);
+
  const features=remaining.slice(0,featureCount);
  const data=remaining.slice(featureCount,featureCount+dataCount);
  const format=s=>simple?simplifySentence(s):s;
+
  let answer=(wantsSummary(original)?"RESUMEN: ":"INFORMACIÓN: ")+article.title+"\n\n";
  answer+="¿QUÉ ES?\n"+definition.map(format).join(" ")+"\n\n";
- if(features.length){answer+="CARACTERÍSTICAS PRINCIPALES\n";features.forEach(s=>answer+="• "+format(s)+"\n\n")}
- if(data.length){answer+="OTROS DATOS IMPORTANTES\n";data.forEach(s=>answer+="• "+format(s)+"\n\n")}
- answer+="CONCLUSIÓN\nSegún la introducción consultada, estos son los conceptos principales de "+article.title+". Puedes abrir la fuente para leer el contenido completo y comprobar los detalles.";
- answer+="\n\nNota: IAGAM organiza información de fuentes públicas. El resumen se basa en el texto consultado y puede necesitar verificación adicional.";
+
+ if(features.length){
+  answer+="CARACTERÍSTICAS PRINCIPALES\n";
+  features.forEach(s=>answer+="• "+format(s)+"\n\n");
+ }
+ if(data.length){
+  answer+="OTROS DATOS IMPORTANTES\n";
+  data.forEach(s=>answer+="• "+format(s)+"\n\n");
+ }
+
+ answer+="CONCLUSIÓN\nLa información anterior se basa en el artículo consultado sobre "+article.title+". Puedes abrir la fuente para leer más detalles.";
+ answer+="\n\nNota: IAGAM organiza información de fuentes públicas. Comprueba los datos importantes en las fuentes originales.";
  return answer.trim();
 }
+
 async function ask(question){
- addMessage(question,"user");document.getElementById("newSearch").hidden=false;
- send.disabled=true;statusBox.textContent="Analizando tu pregunta...";
+ addMessage(question,"user");
+ document.getElementById("newSearch").hidden=false;
+ send.disabled=true;
+ statusBox.textContent="Analizando tu pregunta...";
+
  try{
-  const query=cleanQuery(question);const queryWords=getWords(query);
-  if(!query||!queryWords.length){addMessage("Escribe un tema más específico para buscar información.","bot");return}
+  /* Primero revisa si es una pregunta directa conocida. */
+  const directAnswer=answerKnownQuestion(question);
+  if(directAnswer){
+   addMessage(directAnswer.answer,"bot",directAnswer.sources);
+   return;
+  }
+
+  const query=cleanQuery(question);
+  const queryWords=getWords(query);
+
+  if(!query||!queryWords.length){
+   addMessage("No pude identificar el tema de tu pregunta. Intenta escribirlo con otras palabras o indica el tema específico.","bot");
+   return;
+  }
+
   statusBox.textContent="Buscando información relacionada...";
   const results=await searchWikipedia(query);
-  if(!results.length){addMessage("No encontré resultados para ese tema. Intenta con otras palabras.","bot");return}
-  const candidates=results.map(item=>({...item,relevance:titleScore(queryWords,item.title)}))
+
+  if(!results.length){
+   addMessage("No encontré una fuente adecuada para responder esa pregunta. Prueba con otras palabras o escribe un tema más específico.","bot");
+   return;
+  }
+
+  const candidates=results.map(item=>({
+   ...item,
+   relevance:titleScore(queryWords,item.title)
+  }))
   .filter(item=>item.relevance.matched>0)
-  .sort((a,b)=>b.relevance.ratio-a.relevance.ratio||b.relevance.matched-a.relevance.matched);
-  if(!candidates.length){addMessage("Encontré resultados, pero sus títulos no coinciden suficientemente con el tema. Intenta escribirlo de otra manera.","bot");return}
-  statusBox.textContent="Revisando la introducción del artículo...";
-  const articles=await Promise.all(candidates.slice(0,5).map(item=>getArticle(item.pageid).catch(()=>null)));
+  .sort((a,b)=>
+   b.relevance.ratio-a.relevance.ratio||
+   b.relevance.matched-a.relevance.matched
+  );
+
+  if(!candidates.length){
+   addMessage("Encontré resultados, pero sus títulos no coinciden suficientemente con el tema de tu pregunta. No quiero mostrarte información que pueda ser incorrecta. Intenta formularla de otra manera.","bot");
+   return;
+  }
+
+  statusBox.textContent="Comprobando que los resultados correspondan al tema...";
+  const articles=await Promise.all(
+   candidates.slice(0,6).map(item=>getArticle(item.pageid).catch(()=>null))
+  );
   const valid=articles.filter(a=>a&&a.extract&&a.extract.length>80);
-  if(!valid.length){addMessage("No pude obtener una introducción suficiente de las fuentes encontradas. Intenta de nuevo más tarde.","bot");return}
-  const best=valid[0];const sourceList=valid.slice(0,3).map(a=>({title:a.title,url:a.url}));
-  addMessage(makeAnswer(question,best),"bot",sourceList);
+
+  if(!valid.length){
+   addMessage("No pude obtener información suficiente de las fuentes encontradas. Intenta de nuevo más tarde.","bot");
+   return;
+  }
+
+  /* No aceptar coincidencias débiles en búsquedas de varias palabras. */
+  const best=valid.map(article=>({
+   article,
+   score:titleScore(queryWords,article.title)
+  })).sort((a,b)=>b.score.ratio-a.score.ratio||b.score.matched-a.score.matched)[0];
+
+  const minimumMatches=queryWords.length===1?1:Math.max(2,Math.ceil(queryWords.length*.5));
+
+  if(best.score.matched<minimumMatches){
+   addMessage("No encontré un artículo cuyo título coincida lo suficiente con tu pregunta. Prefiero avisarte antes que darte una respuesta de otro tema. Prueba usando el nombre específico del tema.","bot");
+   return;
+  }
+
+  const sourceList=valid.slice(0,3).map(a=>({title:a.title,url:a.url}));
+  addMessage(makeAnswer(question,best.article),"bot",sourceList);
+
  }catch(error){
   addMessage("No pude consultar las fuentes en este momento. Comprueba tu conexión e inténtalo de nuevo.","bot");
  }finally{
-  statusBox.textContent="";send.disabled=false;input.focus();
+  statusBox.textContent="";
+  send.disabled=false;
+  input.focus();
  }
 }
+
 form.addEventListener("submit",event=>{
- event.preventDefault();const question=input.value.trim();if(!question)return;
- input.value="";ask(question);
+ event.preventDefault();
+ const question=input.value.trim();
+ if(!question)return;
+ input.value="";
+ ask(question);
 });
 input.addEventListener("keydown",event=>{
- if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();form.requestSubmit()}
+ if(event.key==="Enter"&&!event.shiftKey){
+  event.preventDefault();
+  form.requestSubmit();
+ }
 });
+
 if("serviceWorker" in navigator){
  window.addEventListener("load",()=>{
-  navigator.serviceWorker.register("./service-worker.js").catch(error=>console.log("Service Worker:",error));
+  navigator.serviceWorker.register("./service-worker.js")
+   .catch(error=>console.log("Service Worker:",error));
  });
 }
 </script>
