@@ -151,7 +151,7 @@ footer{text-align:center;padding:13px;color:#647c99;font-size:11px}
   <button type="button" class="math-action" id="calculateButton">Calcular</button>
   <div id="mathStatus" role="status"></div>
   <div class="math-result" id="mathResult" aria-live="polite">Aquí aparecerá el resultado y su explicación.</div>
-  <p class="math-help">Admite +, −, ×, ÷, paréntesis, potencias (^), porcentajes (%) y raíces cuadradas (√ o raiz). Usa punto o coma para decimales. No escribas el signo =.</p>
+  <p class="math-help">Admite +, −, ×, ÷, paréntesis, potencias (^), porcentajes (%) y raíces cuadradas (√81). Usa punto o coma para decimales. No escribas el signo =.</p>
  </div>
 </section>
 </main>
@@ -236,8 +236,10 @@ function calculateExpression(raw){
   .replace(/[×x]/g,"*")
   .replace(/[÷:]/g,"/")
   .replace(/[−–]/g,"-")
-  .replace(/√\s*\(/g,"sqrt(")
-  .replace(/raiz\s*\(/g,"sqrt(")
+  .replace(/√\s*\((\d+(?:\.\d+)?)\)/g,"sqrt($1)")
+  .replace(/√\s*(\d+(?:\.\d+)?)/g,"sqrt($1)")
+  .replace(/raiz\s*\((\d+(?:\.\d+)?)\)/g,"sqrt($1)")
+  .replace(/raiz\s+(\d+(?:\.\d+)?)/g,"sqrt($1)")
   .replace(/\s+/g,"");
 
  expr=expr.replace(/(\d+(?:\.\d+)?)%de(\d+(?:\.\d+)?)/g,"($1/100*$2)");
@@ -264,9 +266,9 @@ function calculateExpression(raw){
    return v;
   }
   if(t==="sqrt"){
-   if(take()!=="(")throw new Error("Escribe la raíz como √(número).");
+   if(take()!=="(")throw new Error("Escribe la raíz como √81, sin paréntesis.");
    const v=addSub();
-   if(take()!==")")throw new Error("Falta cerrar el paréntesis de la raíz.");
+   if(take()!==")")throw new Error("Falta cerrar el paréntesis de la operación.");
    if(v<0)throw new Error("No se puede calcular la raíz cuadrada real de un número negativo.");
    const result=Math.sqrt(v);
    steps.push("√"+fmt(v)+" = "+fmt(result));
@@ -323,20 +325,17 @@ function explainMath(expression,calculation){
  const steps=calculation.steps;
  let explanation="Operación: "+expression+"\n\n";
  explanation+="EXPLICACIÓN FÁCIL:\n";
-
  const normalized=expression.toLowerCase();
+
  if(expression.includes("√")||normalized.includes("raiz")||normalized.includes("sqrt")){
   const result=calculation.value;
   const target=result*result;
   const lower=Math.floor(result);
   const upper=lower+1;
-  const lowerSquare=lower*lower;
-  const upperSquare=upper*upper;
-
   explanation+="1. Buscamos entre qué números enteros está la raíz.\n";
-  explanation+=lower+" × "+lower+" = "+lowerSquare+"\n";
-  explanation+=upper+" × "+upper+" = "+upperSquare+"\n";
-  explanation+="Como "+fmt(target)+" está entre "+lowerSquare+" y "+upperSquare+", su raíz está entre "+lower+" y "+upper+".\n\n";
+  explanation+=lower+" × "+lower+" = "+(lower*lower)+"\n";
+  explanation+=upper+" × "+upper+" = "+(upper*upper)+"\n";
+  explanation+="Como "+fmt(target)+" está entre esos resultados, la raíz está entre "+lower+" y "+upper+".\n\n";
   explanation+="2. Probamos con un número decimal: "+fmt(result)+".\n";
   explanation+=fmt(result)+" × "+fmt(result)+" = "+fmt(target)+".\n";
   explanation+="Este resultado está muy cerca del número que buscamos.\n";
@@ -344,19 +343,18 @@ function explainMath(expression,calculation){
   steps.forEach((step,index)=>{
    const operation=step.split(" = ")[0];
    let reason="Resolvemos esta parte de la operación.";
-   if(operation.includes("×")) reason="Multiplicamos los dos números.";
-   else if(operation.includes("÷")) reason="Dividimos el primer número entre el segundo.";
-   else if(operation.includes(" + ")) reason="Sumamos los dos números.";
-   else if(operation.includes(" - ")) reason="Restamos el segundo número al primero.";
-   else if(operation.includes("^")) reason="Calculamos la potencia.";
-   else if(operation.includes("%")) reason="Convertimos el porcentaje a una cantidad decimal.";
-   explanation+=(index+1)+". "+reason+"\n   "+step+"\n";
+   if(operation.includes("×")) reason="Multiplicamos los dos números. La multiplicación se resuelve antes que la suma o la resta.";
+   else if(operation.includes("÷")) reason="Dividimos el primer número entre el segundo para saber cuántas veces cabe.";
+   else if(operation.includes(" + ")) reason="Sumamos las cantidades para obtener el total.";
+   else if(operation.includes(" − ")||operation.includes(" - ")) reason="Restamos la segunda cantidad a la primera para encontrar la diferencia.";
+   else if(operation.includes("^")) reason="Calculamos la potencia: multiplicamos el número por sí mismo las veces que indica el exponente.";
+   else if(operation.includes("%")) reason="Convertimos el porcentaje en una cantidad sobre 100.";
+   explanation+=(index+1)+". "+reason+"\n"+step+"\n\n";
   });
  }else{
   explanation+="Esta operación no necesita pasos adicionales.\n";
  }
-
- explanation+="\nRESULTADO FINAL: "+fmt(calculation.value);
+ explanation+="RESULTADO FINAL: "+fmt(calculation.value);
  return explanation;
 }
 function runCalculation(){
