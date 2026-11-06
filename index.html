@@ -326,8 +326,20 @@ function explainMath(expression,calculation){
 
  const normalized=expression.toLowerCase();
  if(expression.includes("√")||normalized.includes("raiz")||normalized.includes("sqrt")){
-  explanation+="1. La raíz cuadrada busca un número que, multiplicado por sí mismo, se acerque al número que está dentro de la raíz.\n";
-  explanation+="2. "+fmt(calculation.value)+" × "+fmt(calculation.value)+" ≈ "+fmt(calculation.value*calculation.value)+".\n";
+  const result=calculation.value;
+  const target=result*result;
+  const lower=Math.floor(result);
+  const upper=lower+1;
+  const lowerSquare=lower*lower;
+  const upperSquare=upper*upper;
+
+  explanation+="1. Buscamos entre qué números enteros está la raíz.\n";
+  explanation+=lower+" × "+lower+" = "+lowerSquare+"\n";
+  explanation+=upper+" × "+upper+" = "+upperSquare+"\n";
+  explanation+="Como "+fmt(target)+" está entre "+lowerSquare+" y "+upperSquare+", su raíz está entre "+lower+" y "+upper+".\n\n";
+  explanation+="2. Probamos con un número decimal: "+fmt(result)+".\n";
+  explanation+=fmt(result)+" × "+fmt(result)+" = "+fmt(target)+".\n";
+  explanation+="Este resultado está muy cerca del número que buscamos.\n";
  }else if(steps.length){
   steps.forEach((step,index)=>{
    const operation=step.split(" = ")[0];
@@ -347,7 +359,6 @@ function explainMath(expression,calculation){
  explanation+="\nRESULTADO FINAL: "+fmt(calculation.value);
  return explanation;
 }
-
 function runCalculation(){
  const expression=mathInput.value.trim();
  try{
